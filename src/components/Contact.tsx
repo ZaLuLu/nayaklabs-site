@@ -1,54 +1,75 @@
-import { GlassLinesBackground } from './GlassLinesBackground'
+import { useState, useEffect } from 'react'
 import { CrosshairTicks } from './CrosshairTicks'
 import { ScrollReveal } from './ScrollReveal'
 import { SectionEyebrow } from './SectionEyebrow'
+import { SpotlightCard } from './SpotlightCard'
+import { sound } from '../utils/audioEngine'
+import { useTheme } from '../utils/themeContext'
+import confetti from 'canvas-confetti'
+import { Send, Check, Mail, ArrowUpRight } from 'lucide-react'
 
-const whyItems = [
-  { num: '01', title: 'Production from day one', detail: 'No demo-ware.' },
-  { num: '02', title: 'Taught by builders', detail: 'Engineers who ship, teaching what they use.' },
-  { num: '03', title: 'Designed to last', detail: 'Clean code, considered UX, no throwaway work.' },
-  { num: '04', title: 'Always shipping', detail: 'Weekly releases, public changelogs.' },
+const WHY_ITEMS = [
+  { num: '01', title: 'Production from day one', detail: 'No toy demos. Every line of code is structured for live traffic and edge environments.' },
+  { num: '02', title: 'Engineers who ship', detail: 'Taught and built by engineers actively deploying LLMs, RAG, and distributed systems.' },
+  { num: '03', title: 'Designed to compound', detail: 'Clean code, resilient architectural patterns, and considered developer experiences.' },
+  { num: '04', title: 'Weekly shipping cadence', detail: 'Public changelogs, staging branch previews, and relentless iteration.' },
 ]
 
-/**
- * Contact section — bookends the page, same background as Hero.
- * Left: numbered "why us" list.
- * Right: email + instagram contact tiles.
- * Footer strip at bottom.
- */
 export function Contact() {
+  const { setCursorLabel, activeBrief } = useTheme()
+  const [inquiryType, setInquiryType] = useState<'services' | 'training' | 'product' | 'general'>('services')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Listen to activeBrief changes from the Services Configurator
+  useEffect(() => {
+    if (activeBrief) {
+      setMessage(activeBrief)
+      setInquiryType('services')
+    }
+  }, [activeBrief])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!name || !email) return
+
+    sound.playClick(1050)
+    setIsSubmitting(true)
+
+    setTimeout(() => {
+      setIsSubmitting(false)
+      setIsSubmitted(true)
+      sound.playSuccess(0.1)
+      confetti({
+        particleCount: 50,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#E2001A', '#ffffff', '#10B981'],
+      })
+    }, 700)
+  }
+
   return (
     <section
       id="contact"
-      className="relative min-h-screen bg-c1 py-24 md:py-36 overflow-hidden"
+      className="relative min-h-screen py-28 md:py-36 overflow-hidden border-t border-[var(--border-base)] transition-colors duration-300"
       aria-labelledby="contact-headline"
     >
-      {/* Reused glass lines background */}
-      <GlassLinesBackground lineCount={10} />
-
-      {/* Corner crosshairs */}
       <CrosshairTicks />
 
-      {/* Vertical side labels */}
-      <div className="absolute left-5 top-1/2 -translate-y-1/2 z-10 hidden lg:block" aria-hidden="true">
-        <p className="side-label" style={{ transform: 'rotate(-90deg)', transformOrigin: 'center' }}>
-          EST. INDIA
-        </p>
-      </div>
-      <div className="absolute right-5 top-1/2 -translate-y-1/2 z-10 hidden lg:block" aria-hidden="true">
-        <p className="side-label" style={{ transform: 'rotate(90deg)', transformOrigin: 'center' }}>
-          EST. INDIA
-        </p>
-      </div>
-
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10">
-        {/* Eyebrow + index */}
+        {/* Eyebrow */}
         <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-16 gap-4">
           <ScrollReveal delay={0}>
-            <SectionEyebrow index="04" label="CONTACT" />
+            <SectionEyebrow index="06" label="CONTACT" />
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <p className="section-index">04 / 04</p>
+            <p className="font-mono text-xs text-[var(--text-muted)] tracking-wider">
+              06 / 06 // INITIATE CONVERSATION
+            </p>
           </ScrollReveal>
         </div>
 
@@ -56,101 +77,242 @@ export function Contact() {
         <ScrollReveal delay={0.1}>
           <h2
             id="contact-headline"
-            className="font-display font-bold text-c2 mb-6"
+            className="font-display font-bold text-[var(--text-primary)] mb-6 tracking-tight"
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2rem, 5.5vw, 4.5rem)',
-              lineHeight: 0.95,
-              letterSpacing: '-0.03em',
-              maxWidth: '16ch',
+              fontSize: 'clamp(2.4rem, 6vw, 5rem)',
+              lineHeight: 0.94,
+              maxWidth: '18ch',
             }}
           >
             Ready to build something that{' '}
-            <strong className="text-c2" style={{ fontWeight: 800 }}>
+            <span className="text-[var(--accent-primary,#E2001A)]">
               actually ships?
-            </strong>
+            </span>
           </h2>
         </ScrollReveal>
 
-        {/* Sub copy */}
+        {/* Subtitle */}
         <ScrollReveal delay={0.18}>
-          <p className="text-c3 text-base leading-relaxed max-w-[50ch] mb-16" style={{ fontFamily: 'var(--font-body)' }}>
-            Whether it's a product, a cohort seat, or a services engagement — start a conversation.
+          <p
+            className="text-[var(--text-secondary)] text-base md:text-lg leading-relaxed max-w-[50ch] mb-16 font-light"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            Whether you need a dedicated AI engineering pod, a seat in our upcoming training cohort, or access to our products — let's build together.
           </p>
         </ScrollReveal>
 
-        {/* Two-column: why list + contact tiles */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-          {/* LEFT: Why choose us */}
-          <div>
-            <ScrollReveal delay={0.22}>
-              <p className="font-mono text-[0.65rem] tracking-[0.15em] text-c3 mb-6" style={{ fontFamily: 'var(--font-mono)' }}>
-                WHY CHOOSE US
+        {/* 2-Column: Left (Why Us + Direct Tiles) / Right (Interactive Inquiry Wizard) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Column */}
+          <div className="lg:col-span-5 flex flex-col gap-10">
+            {/* Why Us List */}
+            <div>
+              <p className="font-mono text-[0.68rem] tracking-[0.2em] text-[var(--text-muted)] uppercase mb-6">
+                // WHY CHOOSE NAYAK LABS
               </p>
-            </ScrollReveal>
-
-            <div className="flex flex-col">
-              {whyItems.map((item, i) => (
-                <ScrollReveal key={item.num} delay={0.28 + i * 0.08}>
-                  <div>
-                    <div className="hairline mb-4" />
-                    <div className="flex gap-4 pb-5">
-                      <span className="why-item-num mt-0.5">{item.num}</span>
-                      <div>
-                        <p className="text-c2 text-sm font-medium mb-0.5" style={{ fontFamily: 'var(--font-body)' }}>
-                          {item.title}
-                        </p>
-                        <p className="text-c3 text-sm" style={{ fontFamily: 'var(--font-body)' }}>
-                          {item.detail}
-                        </p>
+              <div className="flex flex-col">
+                {WHY_ITEMS.map((item, i) => (
+                  <ScrollReveal key={item.num} delay={0.2 + i * 0.06}>
+                    <div className="border-b border-[var(--border-base)] pb-5 mb-5">
+                      <div className="flex items-start gap-4">
+                        <span className="font-mono text-xs font-bold text-[var(--accent-primary,#E2001A)] mt-0.5">
+                          {item.num}
+                        </span>
+                        <div>
+                          <p className="text-[var(--text-primary)] text-sm font-semibold mb-1">
+                            {item.title}
+                          </p>
+                          <p className="text-[var(--text-muted)] text-xs leading-relaxed font-light">
+                            {item.detail}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-              <div className="hairline" />
+                  </ScrollReveal>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* RIGHT: Contact tiles */}
-          <div className="flex flex-col gap-4">
-            <ScrollReveal delay={0.3}>
+            {/* Direct Contact Cards */}
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
               <a
                 href="mailto:hello@nayaklabs.com"
-                className="contact-tile block group"
-                aria-label="Send email to hello@nayaklabs.com"
+                onMouseEnter={() => setCursorLabel('EMAIL')}
+                onMouseLeave={() => setCursorLabel(null)}
+                className="contact-tile p-5 flex items-center justify-between group rounded-sm border border-[var(--border-base)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-all"
               >
-                <p className="font-mono text-[0.65rem] tracking-[0.15em] text-c3 mb-3" style={{ fontFamily: 'var(--font-mono)' }}>
-                  EMAIL
-                </p>
-                <p
-                  className="text-c2 text-base font-medium group-hover:text-c3 transition-colors"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  hello@nayaklabs.com
-                </p>
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
+                  <div>
+                    <p className="font-mono text-[0.62rem] text-[var(--text-muted)] uppercase tracking-widest">
+                      DIRECT EMAIL
+                    </p>
+                    <p className="font-mono text-xs text-[var(--text-primary)]">
+                      hello@nayaklabs.com
+                    </p>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
               </a>
-            </ScrollReveal>
 
-            <ScrollReveal delay={0.38}>
               <a
                 href="https://instagram.com/nayaklabs"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-tile block group"
-                aria-label="Visit Nayak Labs on Instagram (opens in new tab)"
+                onMouseEnter={() => setCursorLabel('OPEN')}
+                onMouseLeave={() => setCursorLabel(null)}
+                className="contact-tile p-5 flex items-center justify-between group rounded-sm border border-[var(--border-base)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-all"
               >
-                <p className="font-mono text-[0.65rem] tracking-[0.15em] text-c3 mb-3" style={{ fontFamily: 'var(--font-mono)' }}>
-                  INSTAGRAM
-                </p>
-                <p
-                  className="text-c2 text-base font-medium group-hover:text-c3 transition-colors"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  instagram.com/nayaklabs ↗
-                </p>
+                <div className="flex items-center gap-3">
+                  <svg className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                  </svg>
+                  <div>
+                    <p className="font-mono text-[0.62rem] text-[var(--text-muted)] uppercase tracking-widest">
+                      INSTAGRAM
+                    </p>
+                    <p className="font-mono text-xs text-[var(--text-primary)]">
+                      @nayaklabs
+                    </p>
+                  </div>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
               </a>
-            </ScrollReveal>
+            </div>
+          </div>
+
+          {/* Right Column: Interactive Inquiry Form */}
+          <div className="lg:col-span-7">
+            <SpotlightCard
+              borderGlowColor="rgba(226, 0, 26, 0.3)"
+              className="p-6 md:p-10 rounded-sm border-[var(--border-base)] bg-[var(--bg-card)]"
+            >
+              {isSubmitted ? (
+                <div className="py-12 flex flex-col items-center text-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+                    <Check className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />
+                  </div>
+                  <h3 className="font-display text-2xl font-bold text-[var(--text-primary)]">
+                    Inquiry Received.
+                  </h3>
+                  <p className="text-[var(--text-muted)] text-sm max-w-[38ch] font-light">
+                    Our engineering leads review all inquiries within 24 hours. We will reach out to <strong className="text-[var(--text-primary)]">{email}</strong>.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsSubmitted(false)
+                      setName('')
+                      setEmail('')
+                      setMessage('')
+                    }}
+                    className="mt-4 px-4 py-2 border border-[var(--border-base)] font-mono text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer rounded-xs"
+                  >
+                    Send Another Dispatch
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="flex flex-col gap-6 font-mono text-xs">
+                  {/* Inquiry Type Buttons */}
+                  <div>
+                    <label className="text-[var(--text-secondary)] block mb-2.5 uppercase tracking-wider text-[0.68rem]">
+                      1. Select Inquiry Stream:
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {(
+                        [
+                          { id: 'services', label: 'Services Pod' },
+                          { id: 'training', label: 'Tech Training' },
+                          { id: 'product', label: 'Products' },
+                          { id: 'general', label: 'Other / Hello' },
+                        ] as const
+                      ).map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => {
+                            sound.playClick(900)
+                            setInquiryType(item.id)
+                          }}
+                          className={`p-2.5 border text-center transition-all cursor-pointer rounded-xs ${
+                            inquiryType === item.id
+                              ? 'bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-bold border-[var(--btn-primary-bg)]'
+                              : 'bg-[var(--bg-surface)] border-[var(--border-base)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Name & Email Fields */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[var(--text-secondary)] block mb-2 uppercase tracking-wider text-[0.68rem]">
+                        2. Your Name *
+                      </label>
+                      <input
+                        required
+                        type="text"
+                        placeholder="Ada Lovelace"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full bg-[var(--bg-surface)] border border-[var(--border-base)] p-3 text-[var(--text-primary)] font-mono text-xs focus:outline-none focus:border-[var(--border-hover)] rounded-xs placeholder:text-[var(--text-muted)]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[var(--text-secondary)] block mb-2 uppercase tracking-wider text-[0.68rem]">
+                        3. Email Address *
+                      </label>
+                      <input
+                        required
+                        type="email"
+                        placeholder="ada@company.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full bg-[var(--bg-surface)] border border-[var(--border-base)] p-3 text-[var(--text-primary)] font-mono text-xs focus:outline-none focus:border-[var(--border-hover)] rounded-xs placeholder:text-[var(--text-muted)]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Message & Scope Brief */}
+                  <div>
+                    <label className="text-[var(--text-secondary)] block mb-2 uppercase tracking-wider text-[0.68rem]">
+                      4. Project Scope / Questions
+                    </label>
+                    <textarea
+                      rows={4}
+                      placeholder="Tell us what you're building, target timelines, or specific questions..."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      className="w-full bg-[var(--bg-surface)] border border-[var(--border-base)] p-3 text-[var(--text-primary)] font-mono text-xs focus:outline-none focus:border-[var(--border-hover)] rounded-xs placeholder:text-[var(--text-muted)] leading-relaxed resize-none"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    onMouseEnter={() => setCursorLabel('SHIP')}
+                    onMouseLeave={() => setCursorLabel(null)}
+                    className="btn-primary w-full justify-center py-3 text-xs tracking-widest font-bold cursor-pointer disabled:opacity-50"
+                  >
+                    {isSubmitting ? (
+                      <span>TRANSMITTING DISPATCH...</span>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span>INITIATE ENGAGEMENT</span>
+                        <Send className="w-3.5 h-3.5" />
+                      </div>
+                    )}
+                  </button>
+                </form>
+              )}
+            </SpotlightCard>
           </div>
         </div>
       </div>

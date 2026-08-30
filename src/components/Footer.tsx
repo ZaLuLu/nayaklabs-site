@@ -1,52 +1,119 @@
+import { sound } from '../utils/audioEngine'
+import { useTheme, AccentTheme } from '../utils/themeContext'
+import { ArrowUp, Sun, Moon } from 'lucide-react'
+
 interface FooterProps {
   onScrollTo: (id: string) => void
 }
 
-/**
- * Footer strip — sits at the very bottom of the Contact section.
- * Hairline rule, then flex row: copyright · links · back to top.
- */
 export function Footer({ onScrollTo }: FooterProps) {
-  return (
-    <footer className="relative z-10 bg-c1 border-t border-white/10" aria-label="Site footer">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 flex-wrap">
-          {/* Left: copyright */}
-          <p className="font-mono text-[0.65rem] tracking-[0.1em] text-c3" style={{ fontFamily: 'var(--font-mono)' }}>
-            NAYAK LABS © 2026 — BUILT TO SHIP
-          </p>
+  const { accentTheme, setAccentTheme, themeMode, toggleThemeMode } = useTheme()
 
-          {/* Center/right: links */}
-          <div className="flex items-center gap-5 flex-wrap">
-            <a
-              href="mailto:hello@nayaklabs.com"
-              className="footer-link"
-            >
-              EMAIL
-            </a>
-            <a
-              href="https://instagram.com/nayaklabs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-link"
-            >
-              INSTAGRAM
-            </a>
-            <a
-              href="#"
-              className="footer-link"
-              onClick={(e) => e.preventDefault()}
-            >
-              PRIVACY POLICY
-            </a>
+  return (
+    <footer className="relative z-10 bg-[var(--bg-base)] border-t border-[var(--border-base)] transition-colors duration-300" aria-label="Site footer">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-12">
+        {/* Top footer row: Ecosystem columns */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 pb-12 border-b border-[var(--border-base)] font-mono text-xs">
+          <div>
+            <p className="font-bold text-[var(--text-primary)] uppercase tracking-wider mb-3">PRODUCTS</p>
+            <ul className="flex flex-col gap-2 text-[var(--text-muted)]">
+              <li><a href="#products" onClick={() => onScrollTo('products')} className="hover:text-[var(--text-primary)] transition-colors">DI Notes Visualizer</a></li>
+              <li><a href="#products" onClick={() => onScrollTo('products')} className="hover:text-[var(--text-primary)] transition-colors">EventMesh Radar</a></li>
+            </ul>
           </div>
 
-          {/* Right: back to top */}
+          <div>
+            <p className="font-bold text-[var(--text-primary)] uppercase tracking-wider mb-3">ACADEMY</p>
+            <ul className="flex flex-col gap-2 text-[var(--text-muted)]">
+              <li><a href="#training" onClick={() => onScrollTo('training')} className="hover:text-[var(--text-primary)] transition-colors">Cohort Curriculum</a></li>
+              <li><a href="#training" onClick={() => onScrollTo('training')} className="hover:text-[var(--text-primary)] transition-colors">DSA Masterclass</a></li>
+              <li><a href="#training" onClick={() => onScrollTo('training')} className="hover:text-[var(--text-primary)] transition-colors">AI & MLOps Track</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="font-bold text-[var(--text-primary)] uppercase tracking-wider mb-3">SERVICES</p>
+            <ul className="flex flex-col gap-2 text-[var(--text-muted)]">
+              <li><a href="#services" onClick={() => onScrollTo('services')} className="hover:text-[var(--text-primary)] transition-colors">Custom AI Models</a></li>
+              <li><a href="#services" onClick={() => onScrollTo('services')} className="hover:text-[var(--text-primary)] transition-colors">High-Velocity Web</a></li>
+              <li><a href="#services" onClick={() => onScrollTo('services')} className="hover:text-[var(--text-primary)] transition-colors">Workflow Automation</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="font-bold text-[var(--text-primary)] uppercase tracking-wider mb-3">CONNECT</p>
+            <ul className="flex flex-col gap-2 text-[var(--text-muted)]">
+              <li><a href="mailto:hello@nayaklabs.com" className="hover:text-[var(--text-primary)] transition-colors">hello@nayaklabs.com</a></li>
+              <li><a href="https://instagram.com/nayaklabs" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text-primary)] transition-colors">Instagram ↗</a></li>
+              <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text-primary)] transition-colors">Twitter / X ↗</a></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom footer row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pt-8 font-mono text-xs text-[var(--text-muted)]">
+          {/* Left: Copyright */}
+          <div className="flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-[var(--accent-primary,#E2001A)]" />
+            <p className="text-[0.68rem] tracking-wider text-[var(--text-secondary)]">
+              NAYAK LABS © 2026 — ENGINEERED TO SHIP
+            </p>
+          </div>
+
+          {/* Theme Quick Switcher */}
+          <div className="flex items-center gap-4 text-[0.62rem]">
+            <button
+              onClick={() => toggleThemeMode()}
+              className="flex items-center gap-1.5 px-2 py-1 border border-[var(--border-base)] rounded-xs hover:text-[var(--text-primary)] transition-colors cursor-pointer bg-transparent"
+            >
+              {themeMode === 'dark' ? (
+                <>
+                  <Sun className="w-3 h-3 text-amber-400" />
+                  <span>LIGHT MODE</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3 h-3 text-blue-600" />
+                  <span>DARK MODE</span>
+                </>
+              )}
+            </button>
+
+            <div className="flex items-center gap-1.5">
+              <span className="text-[var(--text-muted)]">ACCENT:</span>
+              {(
+                [
+                  { id: 'swiss-red', label: 'RED' },
+                  { id: 'emerald', label: 'EMR' },
+                  { id: 'cobalt', label: 'BLU' },
+                  { id: 'monochrome', label: 'MONO' },
+                ] as const
+              ).map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setAccentTheme(t.id as AccentTheme)}
+                  className={`px-1.5 py-0.5 border rounded-xs transition-colors cursor-pointer ${
+                    accentTheme === t.id
+                      ? 'border-[var(--btn-primary-bg)] text-[var(--text-primary)] font-bold bg-[var(--bg-surface)]'
+                      : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Back to top */}
           <button
-            onClick={() => onScrollTo('home')}
-            className="footer-link bg-transparent border-none cursor-pointer hover:text-c2 transition-colors"
+            onClick={() => {
+              sound.playClick(800)
+              onScrollTo('home')
+            }}
+            className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors cursor-pointer bg-transparent border-none"
           >
-            BACK TO TOP ↑
+            <span>TOP</span>
+            <ArrowUp className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
