@@ -1,0 +1,461 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================
+   NAYAK LABS — DESIGN TOKENS & GLOBAL STYLES
+   4-color palette: black, white, mid-grey, light-grey
+   ================================================================ */
+
+:root {
+  --color-1: #000000;   /* black — primary dark */
+  --color-2: #FFFFFF;   /* white — primary light */
+  --color-3: #888888;   /* mid-grey — secondary/muted */
+  --color-4: #E5E5E5;   /* light-grey — backgrounds/dividers */
+
+  --font-display: 'Clash Display', 'Helvetica Neue', sans-serif;
+  --font-body: 'General Sans', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-snappy: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ================================================================
+   BASE RESET
+   ================================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+  background-color: #000;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-1);
+  color: var(--color-2);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ================================================================
+   TYPOGRAPHY
+   ================================================================ */
+
+/* Hero headline — fluid from 3rem to 9rem */
+.text-hero {
+  font-size: clamp(3.2rem, 13vw, 9.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+}
+
+/* Section headline */
+.text-section-h {
+  font-size: clamp(2.4rem, 6vw, 5.2rem);
+  line-height: 0.93;
+  letter-spacing: -0.03em;
+}
+
+/* About headline — slightly smaller */
+.text-about-h {
+  font-size: clamp(2rem, 4.8vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+}
+
+/* Contact headline */
+.text-contact-h {
+  font-size: clamp(2rem, 5.5vw, 4.8rem);
+  line-height: 0.93;
+  letter-spacing: -0.03em;
+}
+
+/* ================================================================
+   GLASS LINES BACKGROUND
+   ================================================================ */
+
+.glass-lines-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glass-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform-origin: top;
+}
+
+.glass-lines-radial {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 65% 60% at 50% 45%,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.01) 40%,
+    transparent 75%
+  );
+}
+
+/* ================================================================
+   GRAIN OVERLAY SVG FILTER
+   ================================================================ */
+
+.grain-svg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* ================================================================
+   CROSSHAIR TICKS  (+  shape)
+   ================================================================ */
+
+.crosshair {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: '';
+  position: absolute;
+  background-color: var(--color-3);
+  opacity: 0.35;
+}
+
+.crosshair::before {
+  width: 1px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.crosshair::after {
+  height: 1px;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ================================================================
+   HAIRLINE RULES
+   ================================================================ */
+
+.hairline {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ================================================================
+   BUTTONS
+   ================================================================ */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.85rem;
+  background-color: var(--color-2);
+  color: var(--color-1);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.22s var(--ease-in-out);
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--color-2);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.85rem;
+  background-color: transparent;
+  color: var(--color-2);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.22s var(--ease-in-out);
+}
+
+.btn-ghost:hover {
+  background-color: var(--color-2);
+  color: var(--color-1);
+  border-color: var(--color-2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* ================================================================
+   PRODUCT CARDS
+   ================================================================ */
+
+.product-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2.75rem 2.5rem 2.5rem;
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease-in-out),
+              box-shadow 0.25s var(--ease-in-out),
+              background 0.25s var(--ease-in-out);
+  position: relative;
+  background: rgba(255, 255, 255, 0.015);
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.product-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.25s var(--ease-in-out);
+  pointer-events: none;
+}
+
+.product-card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.product-card:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: 3px;
+}
+
+/* ================================================================
+   TAG CHIPS
+   ================================================================ */
+
+.tag-chip {
+  display: inline-block;
+  padding: 0.28rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  color: var(--color-3);
+  transition: all 0.15s ease;
+  background: transparent;
+}
+
+.tag-chip:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: var(--color-2);
+}
+
+/* ================================================================
+   CONTACT TILES
+   ================================================================ */
+
+.contact-tile {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2rem 2.25rem;
+  transition: all 0.22s var(--ease-in-out);
+  cursor: pointer;
+  background: rgba(255,255,255,0.015);
+  display: block;
+  text-decoration: none;
+}
+
+.contact-tile:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.contact-tile:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: 2px;
+}
+
+/* ================================================================
+   VERTICAL SIDE LABEL
+   ================================================================ */
+
+.side-label {
+  position: absolute;
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--color-3);
+  opacity: 0.5;
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ================================================================
+   NAVBAR
+   ================================================================ */
+
+nav button, nav a {
+  background: transparent;
+  border: none;
+}
+
+/* ================================================================
+   HAMBURGER MENU
+   ================================================================ */
+
+.hamburger-line {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--color-2);
+  transition: all 0.25s var(--ease-in-out);
+  transform-origin: center;
+}
+
+/* ================================================================
+   SECTION INDEX / EYEBROW
+   ================================================================ */
+
+.section-index {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--color-3);
+}
+
+/* ================================================================
+   SCROLL DOWN TEXT
+   ================================================================ */
+
+.scroll-down-text {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-3);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scroll-down-text:hover {
+  color: var(--color-2);
+}
+
+/* ================================================================
+   SERVICE LIST
+   ================================================================ */
+
+.service-letter {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+
+.footer-link {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--color-3);
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: var(--color-2);
+}
+
+/* ================================================================
+   WHY-US LIST NUMBERS
+   ================================================================ */
+
+.why-item-num {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--color-3);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ================================================================
+   FOCUS STATES (global)
+   ================================================================ */
+
+:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.6);
+  outline-offset: 3px;
+}
+
+/* ================================================================
+   REDUCED MOTION
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ================================================================
+   UTILITY: number highlight in contact
+   ================================================================ */
+
+.text-highlight {
+  font-weight: 800;
+  color: var(--color-2);
+}
