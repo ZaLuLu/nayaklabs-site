@@ -6,12 +6,16 @@ export type ThemeMode = 'dark' | 'light'
 
 interface ThemeContextType {
   themeMode: ThemeMode
+  theme: ThemeMode
   setThemeMode: (mode: ThemeMode) => void
   toggleThemeMode: () => void
+  toggleTheme: () => void
   accentTheme: AccentTheme
   setAccentTheme: (theme: AccentTheme) => void
   audioEnabled: boolean
+  soundEnabled: boolean
   toggleAudio: () => boolean
+  toggleSound: () => boolean
   cursorLabel: string | null
   setCursorLabel: (label: string | null) => void
   activeBrief: string | null
@@ -96,12 +100,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     <ThemeContext.Provider
       value={{
         themeMode,
+        theme: themeMode,
         setThemeMode,
         toggleThemeMode,
+        toggleTheme: toggleThemeMode,
         accentTheme,
         setAccentTheme,
         audioEnabled,
+        soundEnabled: audioEnabled,
         toggleAudio,
+        toggleSound: toggleAudio,
         cursorLabel,
         setCursorLabel,
         activeBrief,

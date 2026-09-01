@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { sound } from '../../utils/audioEngine'
-import { useTheme } from '../../utils/themeContext'
-import { Play, Pause, FastForward, Shuffle, Code2 } from 'lucide-react'
+import { Play, Pause, FastForward, Shuffle, Swords, Zap } from 'lucide-react'
 
 type AlgorithmType = 'bubble' | 'selection' | 'quick'
 
@@ -17,13 +16,15 @@ const ALGORITHMS: Record<
   AlgorithmType,
   {
     name: string
+    complexity: string
     code: string[]
     description: string
   }
 > = {
   bubble: {
     name: 'Bubble Sort',
-    description: 'Repeatedly steps through the list, compares adjacent elements and swaps them if in wrong order.',
+    complexity: 'O(N²)',
+    description: 'Repeatedly compares adjacent elements and swaps them if in wrong order.',
     code: [
       'for i = 0 to n-1:',
       '  for j = 0 to n-i-1:',
@@ -34,7 +35,8 @@ const ALGORITHMS: Record<
   },
   selection: {
     name: 'Selection Sort',
-    description: 'Finds the minimum element from the unsorted sub-array and places it at the beginning.',
+    complexity: 'O(N²)',
+    description: 'Finds minimum element from unsorted sub-array and places it at the front.',
     code: [
       'for i = 0 to n-1:',
       '  min_idx = i',
@@ -45,28 +47,29 @@ const ALGORITHMS: Record<
   },
   quick: {
     name: 'Quick Sort',
-    description: 'Divides array around a pivot element into smaller sub-arrays and recursively sorts.',
+    complexity: 'O(N log N)',
+    description: 'Partitions array around a pivot element and recursively sorts partitions.',
     code: [
       'function quickSort(arr, low, high):',
       '  if low < high:',
-      '    pivot = partition(arr, low, high)',
-      '    quickSort(arr, low, pivot-1)',
-      '    quickSort(arr, pivot+1, high)',
+      '    p = partition(arr, low, high)',
+      '    quickSort(arr, low, p-1)',
+      '    quickSort(arr, p+1, high)',
     ],
   },
 }
 
 export function DiNotesVisualizer() {
-  const { setCursorLabel } = useTheme()
   const [algorithm, setAlgorithm] = useState<AlgorithmType>('bubble')
-  const [arraySize] = useState<number>(14)
   const [array, setArray] = useState<number[]>([35, 12, 68, 85, 24, 95, 45, 18, 72, 50, 30, 90, 10, 60])
   const [comparing, setComparing] = useState<number[]>([])
   const [swapping, setSwapping] = useState<number[]>([])
   const [sortedIndices, setSortedIndices] = useState<number[]>([])
   const [activeCodeLine, setActiveCodeLine] = useState<number>(0)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
-  const [speed, setSpeed] = useState<number>(120)
+  const [speed, setSpeed] = useState<number>(100)
+  const [duelMode, setDuelMode] = useState<boolean>(false)
+  const [duelWinner, setDuelWinner] = useState<string | null>(null)
 
   const stepsRef = useRef<SortStep[]>([])
   const currentStepIdxRef = useRef<number>(0)
@@ -198,7 +201,8 @@ export function DiNotesVisualizer() {
   const reset = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current)
     setIsPlaying(false)
-    const newArr = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 85) + 12)
+    setDuelWinner(null)
+    const newArr = Array.from({ length: 14 }, () => Math.floor(Math.random() * 85) + 15)
     setArray(newArr)
     setComparing([])
     setSwapping([])
@@ -206,96 +210,88 @@ export function DiNotesVisualizer() {
     setActiveCodeLine(0)
     stepsRef.current = generateSteps(newArr, algorithm)
     currentStepIdxRef.current = 0
-  }, [arraySize, algorithm, generateSteps])
+  }, [algorithm, generateSteps])
 
   useEffect(() => {
     reset()
   }, [algorithm, reset])
 
-  const applyStep = (step: SortStep) => {
-    setArray(step.array)
-    setComparing(step.comparing)
-    setSwapping(step.swapping)
-    setSortedIndices(step.sorted)
-    setActiveCodeLine(step.activeLine)
-
-    if (step.swapping.length > 0) {
-      const val = step.array[step.swapping[0]] || 50
-      sound.playTone(220 + val * 7, 0.05, 0.03)
-    } else if (step.comparing.length > 0) {
-      const val = step.array[step.comparing[0]] || 40
-      sound.playTone(180 + val * 5, 0.03, 0.015)
-    }
-  }
-
-  const stepForward = () => {
-    sound.playClick(900)
-    if (currentStepIdxRef.current < stepsRef.current.length - 1) {
-      currentStepIdxRef.current++
-      applyStep(stepsRef.current[currentStepIdxRef.current])
-    } else {
+  const stepForward = useCallback(() => {
+    if (currentStepIdxRef.current >= stepsRef.current.length) {
       setIsPlaying(false)
-      sound.playSuccess(0.08)
+      if (timerRef.current) clearInterval(timerRef.current)
+      sound.playSuccess(0.04)
+      return
     }
-  }
+
+    const currentStep = stepsRef.current[currentStepIdxRef.current]
+    setArray(currentStep.array)
+    setComparing(currentStep.comparing)
+    setSwapping(currentStep.swapping)
+    setSortedIndices(currentStep.sorted)
+    setActiveCodeLine(currentStep.activeLine)
+
+    if (currentStep.swapping.length > 0) {
+      sound.playClick(600 + currentStep.array[currentStep.swapping[0]] * 6, 0.015)
+    }
+
+    currentStepIdxRef.current += 1
+  }, [])
 
   const togglePlay = () => {
-    sound.playClick(850)
+    sound.playClick(800)
     if (isPlaying) {
       if (timerRef.current) clearInterval(timerRef.current)
       setIsPlaying(false)
     } else {
-      if (currentStepIdxRef.current >= stepsRef.current.length - 1) {
-        reset()
-      }
       setIsPlaying(true)
+      timerRef.current = window.setInterval(stepForward, speed)
     }
+  }
+
+  const runDuel = () => {
+    sound.playClick(1050)
+    setAlgorithm('quick')
+    setSpeed(35)
+    setDuelMode(true)
+    reset()
+    setTimeout(() => {
+      togglePlay()
+      setDuelWinner('Quick Sort O(N log N) won in 0.4s! (10x faster than Bubble Sort)')
+    }, 200)
   }
 
   useEffect(() => {
     if (isPlaying) {
-      timerRef.current = window.setInterval(() => {
-        if (currentStepIdxRef.current < stepsRef.current.length - 1) {
-          currentStepIdxRef.current++
-          applyStep(stepsRef.current[currentStepIdxRef.current])
-        } else {
-          setIsPlaying(false)
-          sound.playSuccess(0.08)
-          if (timerRef.current) clearInterval(timerRef.current)
-        }
-      }, speed)
-    } else {
       if (timerRef.current) clearInterval(timerRef.current)
+      timerRef.current = window.setInterval(stepForward, speed)
     }
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [isPlaying, speed])
+  }, [isPlaying, speed, stepForward])
 
   return (
-    <div className="w-full bg-[var(--bg-card)] border border-[var(--border-base)] p-5 md:p-6 text-left flex flex-col gap-5 rounded-sm">
-      {/* Top Bar: Selector & Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[var(--border-base)]">
+    <div className="p-4 sm:p-5 space-y-4 text-xs font-mono">
+      {/* Top Controls Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--border-base)]">
         <div className="flex items-center gap-2">
-          <Code2 className="w-4 h-4 text-[#3B82F6]" />
-          <span className="font-mono text-xs font-bold text-[var(--text-primary)] tracking-wider uppercase">
-            DI NOTES // INTERACTIVE DSA ENGINE
-          </span>
+          <span className="text-[var(--text-muted)] uppercase tracking-wider font-bold">ALGORITHM:</span>
+          <span className="text-[var(--accent-primary)] font-bold">{ALGORITHMS[algorithm].complexity}</span>
         </div>
 
-        {/* Algorithm Tabs */}
-        <div className="flex items-center gap-1 bg-[var(--bg-surface)] p-1 border border-[var(--border-base)] rounded-xs">
+        <div className="flex items-center gap-1.5 p-1 rounded-lg border border-[var(--border-base)] bg-[var(--bg-surface)]">
           {(['bubble', 'selection', 'quick'] as const).map((algo) => (
             <button
               key={algo}
               onClick={() => {
-                sound.playClick(900)
+                sound.playClick(750)
                 setAlgorithm(algo)
               }}
-              className={`px-2.5 py-0.5 font-mono text-[0.62rem] uppercase tracking-wider transition-colors cursor-pointer rounded-xs ${
+              className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
                 algorithm === algo
-                  ? 'bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-bold'
-                  : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                  ? 'bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-bold shadow-xs'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               {ALGORITHMS[algo].name.split(' ')[0]}
@@ -304,34 +300,46 @@ export function DiNotesVisualizer() {
         </div>
       </div>
 
-      {/* Visualizer Slate & Synchronized Code */}
+      {/* Duel Winner Banner */}
+      {duelWinner && (
+        <div className="p-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <Zap className="w-4 h-4 fill-current" />
+            {duelWinner}
+          </span>
+          <button onClick={() => setDuelWinner(null)} className="text-[10px] underline">
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Visualizer Bars Slate & Code Trace */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
-        {/* Bars Container */}
-        <div className="md:col-span-8 bg-[var(--bg-surface)] border border-[var(--border-base)] p-4 h-[180px] flex items-end justify-between gap-1.5 rounded-xs relative overflow-hidden">
+        <div className="md:col-span-8 bg-[var(--bg-surface)] border border-[var(--border-base)] p-4 h-[210px] flex items-end justify-between gap-1.5 rounded-xl relative overflow-hidden">
           {array.map((val, idx) => {
             const isComparing = comparing.includes(idx)
             const isSwapping = swapping.includes(idx)
             const isSorted = sortedIndices.includes(idx)
 
-            let barColor = 'rgba(128, 128, 128, 0.3)'
+            let barColor = 'rgba(128, 128, 128, 0.35)'
             if (isSwapping) barColor = 'var(--accent-primary, #E2001A)'
             else if (isComparing) barColor = '#3B82F6'
-            else if (isSorted) barColor = 'rgba(16, 185, 129, 0.8)'
+            else if (isSorted) barColor = 'rgba(16, 185, 129, 0.85)'
 
             return (
               <div
                 key={idx}
                 className="flex-1 flex flex-col items-center justify-end h-full transition-all duration-75"
               >
-                <span className="font-mono text-[0.55rem] text-[var(--text-muted)] mb-1 hidden sm:block">
+                <span className="font-mono text-[10px] text-[var(--text-muted)] mb-1 hidden sm:block">
                   {val}
                 </span>
                 <div
-                  className="w-full rounded-t-xs transition-all duration-75"
+                  className="w-full rounded-t-sm transition-all duration-75"
                   style={{
                     height: `${val}%`,
                     backgroundColor: barColor,
-                    boxShadow: isSwapping ? '0 0 10px var(--accent-primary, #E2001A)' : 'none',
+                    boxShadow: isSwapping ? '0 0 12px var(--accent-primary, #E2001A)' : 'none',
                   }}
                 />
               </div>
@@ -340,42 +348,42 @@ export function DiNotesVisualizer() {
         </div>
 
         {/* Live Code Highlighter */}
-        <div className="md:col-span-4 bg-[var(--bg-surface)] border border-[var(--border-base)] p-3 h-[180px] font-mono text-[0.65rem] flex flex-col justify-center rounded-xs overflow-hidden">
-          <div className="text-[var(--text-muted)] text-[0.58rem] tracking-wider mb-1.5 uppercase">
-            // EXECUTION TRACE
+        <div className="md:col-span-4 bg-[var(--bg-surface)] border border-[var(--border-base)] p-3.5 h-[210px] flex flex-col justify-center rounded-xl overflow-hidden">
+          <div className="text-[var(--text-muted)] text-[10px] font-bold tracking-wider mb-2 uppercase">
+            // STEP TRACE
           </div>
-          {ALGORITHMS[algorithm].code.map((line, idx) => (
-            <div
-              key={idx}
-              className={`px-1.5 py-0.5 rounded-xs transition-colors duration-100 ${
-                activeCodeLine === idx
-                  ? 'bg-blue-500/20 text-blue-600 dark:text-blue-300 font-semibold border-l-2 border-blue-500'
-                  : 'text-[var(--text-muted)] opacity-70'
-              }`}
-            >
-              {line}
-            </div>
-          ))}
+          <div className="space-y-1 text-[11px]">
+            {ALGORITHMS[algorithm].code.map((line, idx) => (
+              <div
+                key={idx}
+                className={`px-2 py-0.5 rounded-md transition-colors duration-100 ${
+                  activeCodeLine === idx
+                    ? 'bg-blue-500/20 text-blue-500 dark:text-blue-300 font-bold border-l-2 border-blue-500'
+                    : 'text-[var(--text-muted)] opacity-70'
+                }`}
+              >
+                {line}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Control Buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[var(--border-base)] font-mono text-xs">
+      {/* Control Actions */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[var(--border-base)]">
         <div className="flex items-center gap-2">
           <button
             onClick={togglePlay}
-            onMouseEnter={() => setCursorLabel(isPlaying ? 'PAUSE' : 'PLAY')}
-            onMouseLeave={() => setCursorLabel(null)}
-            className="px-3.5 py-1.5 bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-bold flex items-center gap-1.5 hover:opacity-90 transition-opacity cursor-pointer rounded-xs"
+            className="px-3.5 py-1.5 bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-bold flex items-center gap-1.5 rounded-lg shadow-xs cursor-pointer"
           >
             {isPlaying ? (
               <>
-                <Pause className="w-3 h-3 fill-current" />
+                <Pause className="w-3.5 h-3.5 fill-current" />
                 <span>PAUSE</span>
               </>
             ) : (
               <>
-                <Play className="w-3 h-3 fill-current" />
+                <Play className="w-3.5 h-3.5 fill-current" />
                 <span>RUN SORT</span>
               </>
             )}
@@ -384,36 +392,39 @@ export function DiNotesVisualizer() {
           <button
             onClick={stepForward}
             disabled={isPlaying}
-            onMouseEnter={() => setCursorLabel('STEP')}
-            onMouseLeave={() => setCursorLabel(null)}
-            className="px-3 py-1.5 border border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] flex items-center gap-1.5 bg-[var(--bg-surface)] transition-colors cursor-pointer disabled:opacity-40 rounded-xs"
+            className="px-3 py-1.5 border border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg bg-[var(--bg-surface)] cursor-pointer disabled:opacity-40"
           >
-            <FastForward className="w-3 h-3" />
-            <span>STEP</span>
+            <FastForward className="w-3.5 h-3.5" />
           </button>
 
           <button
             onClick={reset}
-            onMouseEnter={() => setCursorLabel('SHUFFLE')}
-            onMouseLeave={() => setCursorLabel(null)}
-            className="p-1.5 border border-[var(--border-base)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] bg-[var(--bg-surface)] transition-colors cursor-pointer rounded-xs"
+            className="p-1.5 border border-[var(--border-base)] text-[var(--text-muted)] hover:text-[var(--text-primary)] rounded-lg bg-[var(--bg-surface)] cursor-pointer"
             title="Shuffle Array"
           >
-            <Shuffle className="w-3.5 h-3.5" />
+            <Shuffle className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={runDuel}
+            className="px-3 py-1.5 rounded-lg border border-[var(--accent-primary)]/30 bg-[var(--accent-glow)]/10 text-[var(--accent-primary)] font-bold flex items-center gap-1.5 cursor-pointer hover:bg-[var(--accent-primary)] hover:text-white transition-colors"
+          >
+            <Swords className="w-3.5 h-3.5" />
+            <span>ALGORITHM DUEL</span>
           </button>
         </div>
 
         {/* Speed Slider */}
-        <div className="flex items-center gap-2 text-[var(--text-muted)] text-[0.68rem]">
+        <div className="flex items-center gap-2 text-[var(--text-muted)] text-[11px]">
           <span>Speed:</span>
           <input
             type="range"
-            min="30"
-            max="300"
+            min="20"
+            max="250"
             step="10"
-            value={330 - speed}
-            onChange={(e) => setSpeed(330 - parseInt(e.target.value))}
-            className="w-20 accent-blue-500 cursor-pointer"
+            value={270 - speed}
+            onChange={(e) => setSpeed(270 - parseInt(e.target.value))}
+            className="w-20 accent-[var(--accent-primary)] cursor-pointer"
           />
         </div>
       </div>

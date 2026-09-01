@@ -4,14 +4,14 @@ import { SpotlightCard } from './SpotlightCard'
 import { DiNotesVisualizer } from './products/DiNotesVisualizer'
 import { EventMeshRadar } from './products/EventMeshRadar'
 import { sound } from '../utils/audioEngine'
-import { useTheme } from '../utils/themeContext'
-import { ArrowUpRight, CheckCircle2 } from 'lucide-react'
+import { ArrowUpRight, CheckCircle2, Sparkles } from 'lucide-react'
 
 interface ProductItem {
   id: string
   name: string
   num: string
   category: string
+  benefitTag: string
   tagline: string
   description: string
   tags: string[]
@@ -21,20 +21,19 @@ interface ProductItem {
 }
 
 export function Products() {
-  const { setCursorLabel } = useTheme()
-
   const products: ProductItem[] = [
     {
       id: 'dinotes',
       name: 'DI Notes',
       num: '01',
-      category: '/ INTERACTIVE LEARNING',
-      tagline: 'Learning that responds to you in real-time.',
+      category: '/ INTERACTIVE LEARNING ENGINE',
+      benefitTag: 'Learn Complex Coding 3x Faster with Visual Cues',
+      tagline: 'See how algorithms work instead of memorizing code.',
       description:
-        'Concepts you can touch. Every lesson comes with a live computational playground — change an input, adjust a parameter, and watch algorithms and equations re-render with synchronized execution tracing.',
-      tags: ['Interactive DSA', 'Visual Algorithms', 'Real-time Math Render', 'Audio-Visual Cues'],
-      highlights: ['Step-by-step memory tracers', 'Live complexity graphs', 'Multi-language code generators'],
-      accentColor: 'rgba(59, 130, 246, 0.4)',
+        'A revolutionary visual notebook for developers and students. Adjust data inputs with a slider and watch sorting trees, memory pointers, and algorithmic step-traces animate in real time.',
+      tags: ['Visual DSA', 'Interactive Sliders', 'Step Tracing', 'Beginner Friendly'],
+      highlights: ['Interactive step-by-step memory tracers', 'Live complexity graphs (O(N log N))', 'Multi-language code output'],
+      accentColor: 'rgba(0, 210, 255, 0.35)',
       component: <DiNotesVisualizer />,
     },
     {
@@ -42,12 +41,13 @@ export function Products() {
       name: 'EventMesh',
       num: '02',
       category: '/ TECH EVENT AGGREGATOR',
-      tagline: 'Every hackathon, meetup, and workshop in one place.',
+      benefitTag: 'Never Miss a High-Value Tech Meetup or Hackathon',
+      tagline: 'All verified developer conferences & summits in one radar.',
       description:
-        'A single real-time discovery feed aggregating verified tech events across India and global developer hubs. Filter by ecosystem, track prize pools, and join with one authenticated click.',
-      tags: ['Hackathons', 'AI Meetups', 'Web3 Summits', '1-Click RSVP'],
-      highlights: ['Automated multi-platform scraping', 'Calendar sync & smart reminders', 'Builder team matching'],
-      accentColor: 'rgba(16, 185, 129, 0.4)',
+        'A real-time discovery platform that scans, curates, and matches you with verified AI hackathons, founder meetups, and developer workshops across India and global tech hubs.',
+      tags: ['AI Hackathons', 'Founder Meetups', '1-Click RSVP', 'Automated Alerts'],
+      highlights: ['Automated multi-platform event indexing', 'Direct calendar integration', 'Collaborator & team finder'],
+      accentColor: 'rgba(0, 245, 160, 0.35)',
       component: <EventMeshRadar />,
     },
   ]
@@ -55,130 +55,118 @@ export function Products() {
   return (
     <section
       id="products"
-      className="min-h-screen py-28 md:py-36 relative border-t border-[var(--border-base)] transition-colors duration-300"
+      className="py-20 md:py-28 relative border-t border-[var(--border-base)] transition-colors duration-300"
       aria-labelledby="products-headline"
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-12 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-8 gap-3">
           <ScrollReveal delay={0}>
-            <SectionEyebrow index="02" label="PRODUCTS" />
+            <SectionEyebrow index="03" label="FLAGSHIP IN-HOUSE PRODUCTS" />
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
             <p className="font-mono text-xs text-[var(--text-muted)] tracking-wider">
-              ( 2 ACTIVE PRODUCTION ENGINES )
+              ( LIVE PRODUCTION APPS • INTERACT BELOW )
             </p>
           </ScrollReveal>
         </div>
 
-        {/* Headline */}
+        {/* Headline with Mixed Fonts */}
         <ScrollReveal delay={0.1}>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <h2
               id="products-headline"
-              className="text-section-h font-display font-bold text-[var(--text-primary)] tracking-tight"
-              style={{ fontFamily: 'var(--font-display)' }}
+              className="text-section-h font-display font-bold text-[var(--text-primary)] tracking-tight leading-[1.14]"
             >
-              Products that<br />actually ship.
+              Software built for{' '}
+              <span className="font-serif italic font-normal text-[var(--accent-primary)]">
+                real-world impact
+              </span>.
             </h2>
-            <p className="font-mono text-xs text-[var(--text-muted)] max-w-[40ch] leading-relaxed">
-              Each tool stands on its own — but together, they form the intelligent foundation of the NayakLabs ecosystem.
+            <p className="font-mono text-xs text-[var(--text-muted)] max-w-[42ch] leading-relaxed">
+              We don't just build client projects — we engineer and scale our own software used by thousands of learners and builders.
             </p>
           </div>
         </ScrollReveal>
 
         {/* Interactive Product Suite Stack */}
-        <div className="flex flex-col gap-24">
+        <div className="flex flex-col gap-14 lg:gap-18">
           {products.map((product, idx) => {
             const isReversed = idx % 2 === 1
             return (
               <ScrollReveal key={product.id} delay={0.15 + idx * 0.1}>
                 <div
-                  className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start ${
+                  className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center ${
                     isReversed ? 'lg:grid-flow-dense' : ''
                   }`}
                 >
-                  {/* Info Column */}
-                  <div
-                    className={`lg:col-span-5 flex flex-col justify-between h-full ${
-                      isReversed ? 'lg:col-start-8' : ''
-                    }`}
-                  >
-                    <div>
-                      {/* Product Number & Category */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="font-mono text-sm font-bold text-[var(--accent-primary,#E2001A)]">
-                          {product.num}
-                        </span>
-                        <span className="font-mono text-xs tracking-widest text-[var(--text-muted)]">
-                          {product.category}
-                        </span>
-                      </div>
-
-                      {/* Product Name */}
-                      <h3
-                        className="font-display text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-3"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                      >
-                        {product.name}
-                      </h3>
-
-                      {/* Tagline */}
-                      <p className="text-[var(--text-secondary)] text-sm md:text-base font-medium mb-4">
-                        {product.tagline}
-                      </p>
-
-                      {/* Full description */}
-                      <p className="text-[var(--text-muted)] text-sm leading-relaxed mb-6 font-light">
-                        {product.description}
-                      </p>
-
-                      {/* Feature Highlights */}
-                      <div className="flex flex-col gap-2 mb-6">
-                        {product.highlights.map((highlight, hIdx) => (
-                          <div key={hIdx} className="flex items-center gap-2 font-mono text-xs text-[var(--text-secondary)]">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
-                            <span>{highlight}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2 mb-8">
-                        {product.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-2.5 py-1 bg-[var(--bg-card)] border border-[var(--border-base)] font-mono text-[0.65rem] text-[var(--text-muted)] tracking-wider rounded-xs"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+                  {/* Product Narrative */}
+                  <div className={`lg:col-span-5 ${isReversed ? 'lg:col-start-8' : ''}`}>
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <span className="font-mono text-xs text-[var(--accent-primary)] font-bold">
+                        {product.num}
+                      </span>
+                      <span className="font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider">
+                        {product.category}
+                      </span>
                     </div>
 
-                    <div className="pt-2">
-                      <a
-                        href="#contact"
-                        onClick={() => sound.playClick(800)}
-                        onMouseEnter={() => setCursorLabel('INQUIRE')}
-                        onMouseLeave={() => setCursorLabel(null)}
-                        className="btn-ghost inline-flex items-center gap-2 text-xs py-2.5 px-4 font-mono tracking-wider"
+                    <div className="inline-block px-3 py-1 rounded-full bg-[var(--bg-surface)] border border-[var(--border-base)] text-xs font-mono text-[var(--text-primary)] mb-3 shadow-xs">
+                      ✨ {product.benefitTag}
+                    </div>
+
+                    <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--text-primary)] tracking-tight mb-2">
+                      {product.name}
+                    </h3>
+                    <p className="font-mono text-xs text-[var(--text-primary)] font-semibold mb-3">
+                      {product.tagline}
+                    </p>
+
+                    <p className="text-sm text-[var(--text-secondary)] font-normal leading-relaxed mb-5">
+                      {product.description}
+                    </p>
+
+                    {/* Highlights */}
+                    <div className="space-y-1.5 mb-5">
+                      {product.highlights.map((h, i) => (
+                        <div key={i} className="flex items-center gap-2 text-xs text-[var(--text-primary)] font-mono">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent-emerald)] shrink-0" />
+                          <span>{h}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1.5 mb-5">
+                      {product.tags.map((t, i) => (
+                        <span
+                          key={i}
+                          className="px-2.5 py-1 rounded-md bg-[var(--bg-surface)] border border-[var(--border-base)] text-xs font-mono text-[var(--text-secondary)]"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => {
+                          sound.playClick(900)
+                          window.open('https://github.com/ZaLuLu/nayaklabs-site', '_blank')
+                        }}
+                        className="btn-primary"
                       >
-                        <span>GET ACCESS TO {product.name.toUpperCase()}</span>
+                        <span>VIEW REPO & DOCS</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />
-                      </a>
+                      </button>
                     </div>
                   </div>
 
-                  {/* Interactive Mini-App Column */}
-                  <div
-                    className={`lg:col-span-7 ${
-                      isReversed ? 'lg:col-start-1' : ''
-                    }`}
-                  >
+                  {/* Interactive Visualizer Canvas */}
+                  <div className={`lg:col-span-7 ${isReversed ? 'lg:col-start-1' : ''}`}>
                     <SpotlightCard
                       borderGlowColor={product.accentColor}
-                      className="rounded-sm shadow-2xl border-[var(--border-base)]"
+                      className="p-1 sm:p-2 rounded-2xl border-[var(--border-base)] bg-[var(--bg-card)]/90 backdrop-blur-md shadow-xl"
                     >
                       {product.component}
                     </SpotlightCard>

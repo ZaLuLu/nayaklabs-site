@@ -1,36 +1,46 @@
 import { useState, useEffect } from 'react'
-import { CrosshairTicks } from './CrosshairTicks'
 import { ScrollReveal } from './ScrollReveal'
 import { SectionEyebrow } from './SectionEyebrow'
 import { SpotlightCard } from './SpotlightCard'
 import { sound } from '../utils/audioEngine'
 import { useTheme } from '../utils/themeContext'
 import confetti from 'canvas-confetti'
-import { Send, Check, Mail, ArrowUpRight } from 'lucide-react'
+import { Send, Mail, Calendar, ShieldCheck, Clock, CheckCircle2, ArrowRight, MessageCircle } from 'lucide-react'
 
-const WHY_ITEMS = [
-  { num: '01', title: 'Production from day one', detail: 'No toy demos. Every line of code is structured for live traffic and edge environments.' },
-  { num: '02', title: 'Engineers who ship', detail: 'Taught and built by engineers actively deploying LLMs, RAG, and distributed systems.' },
-  { num: '03', title: 'Designed to compound', detail: 'Clean code, resilient architectural patterns, and considered developer experiences.' },
-  { num: '04', title: 'Weekly shipping cadence', detail: 'Public changelogs, staging branch previews, and relentless iteration.' },
+const PRESET_TOPICS = [
+  { label: '🚀 Build an AI MVP (2–4 Wks)', subject: 'AI MVP Development Inquiry' },
+  { label: '🎓 Join Engineering Fellowship', subject: 'Fellowship Enrollment & Mentorship' },
+  { label: '⚡ Automate Business Workflows', subject: 'Workflow Automation & Custom Tools' },
+  { label: '🛡️ Request Architecture Audit', subject: 'Technical Audit & Consultation' },
 ]
 
 export function Contact() {
-  const { setCursorLabel, activeBrief } = useTheme()
-  const [inquiryType, setInquiryType] = useState<'services' | 'training' | 'product' | 'general'>('services')
+  const { activeBrief } = useTheme()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Listen to activeBrief changes from the Services Configurator
   useEffect(() => {
     if (activeBrief) {
       setMessage(activeBrief)
-      setInquiryType('services')
     }
   }, [activeBrief])
+
+  const handleSelectPreset = (preset: { label: string; subject: string }) => {
+    sound.playClick(850)
+    setMessage(`Hello Nayak Labs team,\n\nI would like to discuss: ${preset.subject}.\n\nDetails about my project/goals: `)
+  }
+
+  const handleSendWhatsApp = () => {
+    sound.playClick(950)
+    const text = encodeURIComponent(
+      `Hey Suraj, I'm reaching out via Nayak Labs:\n\n${message || 'I have a project idea and would like to discuss timelines and sprint scope.'}`
+    )
+    window.open(`https://wa.me/919876543210?text=${text}`, '_blank')
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,12 +52,12 @@ export function Contact() {
     setTimeout(() => {
       setIsSubmitting(false)
       setIsSubmitted(true)
-      sound.playSuccess(0.1)
+      sound.playSuccess(0.08)
       confetti({
-        particleCount: 50,
-        spread: 70,
+        particleCount: 60,
+        spread: 75,
         origin: { y: 0.6 },
-        colors: ['#E2001A', '#ffffff', '#10B981'],
+        colors: ['#E2001A', '#ffffff', '#00F5A0', '#00D2FF'],
       })
     }, 700)
   }
@@ -55,264 +65,246 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative min-h-screen py-28 md:py-36 overflow-hidden border-t border-[var(--border-base)] transition-colors duration-300"
+      className="relative min-h-screen py-20 md:py-28 overflow-hidden border-t border-[var(--border-base)] transition-colors duration-300"
       aria-labelledby="contact-headline"
     >
-      <CrosshairTicks />
-
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10">
         {/* Eyebrow */}
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-16 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-8 gap-3">
           <ScrollReveal delay={0}>
-            <SectionEyebrow index="06" label="CONTACT" />
+            <SectionEyebrow index="06" label="START A BUILD // GET IN TOUCH" />
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
             <p className="font-mono text-xs text-[var(--text-muted)] tracking-wider">
-              06 / 06 // INITIATE CONVERSATION
+              ( 24-HOUR RESPONSE GUARANTEE • DIRECT FOUNDER ACCESS )
             </p>
           </ScrollReveal>
         </div>
 
-        {/* Headline */}
+        {/* Headline with Mixed Fonts */}
         <ScrollReveal delay={0.1}>
-          <h2
-            id="contact-headline"
-            className="font-display font-bold text-[var(--text-primary)] mb-6 tracking-tight"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.4rem, 6vw, 5rem)',
-              lineHeight: 0.94,
-              maxWidth: '18ch',
-            }}
-          >
-            Ready to build something that{' '}
-            <span className="text-[var(--accent-primary,#E2001A)]">
-              actually ships?
-            </span>
-          </h2>
-        </ScrollReveal>
-
-        {/* Subtitle */}
-        <ScrollReveal delay={0.18}>
-          <p
-            className="text-[var(--text-secondary)] text-base md:text-lg leading-relaxed max-w-[50ch] mb-16 font-light"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            Whether you need a dedicated AI engineering pod, a seat in our upcoming training cohort, or access to our products — let's build together.
-          </p>
-        </ScrollReveal>
-
-        {/* 2-Column: Left (Why Us + Direct Tiles) / Right (Interactive Inquiry Wizard) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column */}
-          <div className="lg:col-span-5 flex flex-col gap-10">
-            {/* Why Us List */}
-            <div>
-              <p className="font-mono text-[0.68rem] tracking-[0.2em] text-[var(--text-muted)] uppercase mb-6">
-                // WHY CHOOSE NAYAK LABS
-              </p>
-              <div className="flex flex-col">
-                {WHY_ITEMS.map((item, i) => (
-                  <ScrollReveal key={item.num} delay={0.2 + i * 0.06}>
-                    <div className="border-b border-[var(--border-base)] pb-5 mb-5">
-                      <div className="flex items-start gap-4">
-                        <span className="font-mono text-xs font-bold text-[var(--accent-primary,#E2001A)] mt-0.5">
-                          {item.num}
-                        </span>
-                        <div>
-                          <p className="text-[var(--text-primary)] text-sm font-semibold mb-1">
-                            {item.title}
-                          </p>
-                          <p className="text-[var(--text-muted)] text-xs leading-relaxed font-light">
-                            {item.detail}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </ScrollReveal>
-                ))}
-              </div>
-            </div>
-
-            {/* Direct Contact Cards */}
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
-              <a
-                href="mailto:hello@nayaklabs.com"
-                onMouseEnter={() => setCursorLabel('EMAIL')}
-                onMouseLeave={() => setCursorLabel(null)}
-                className="contact-tile p-5 flex items-center justify-between group rounded-sm border border-[var(--border-base)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
-                  <div>
-                    <p className="font-mono text-[0.62rem] text-[var(--text-muted)] uppercase tracking-widest">
-                      DIRECT EMAIL
-                    </p>
-                    <p className="font-mono text-xs text-[var(--text-primary)]">
-                      hello@nayaklabs.com
-                    </p>
-                  </div>
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
-              </a>
-
-              <a
-                href="https://instagram.com/nayaklabs"
-                target="_blank"
-                rel="noopener noreferrer"
-                onMouseEnter={() => setCursorLabel('OPEN')}
-                onMouseLeave={() => setCursorLabel(null)}
-                className="contact-tile p-5 flex items-center justify-between group rounded-sm border border-[var(--border-base)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <svg className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
-                  </svg>
-                  <div>
-                    <p className="font-mono text-[0.62rem] text-[var(--text-muted)] uppercase tracking-widest">
-                      INSTAGRAM
-                    </p>
-                    <p className="font-mono text-xs text-[var(--text-primary)]">
-                      @nayaklabs
-                    </p>
-                  </div>
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
-              </a>
-            </div>
+          <div className="max-w-3xl mb-12">
+            <h2
+              id="contact-headline"
+              className="text-section-h font-display font-bold text-[var(--text-primary)] tracking-tight leading-[1.14] mb-3"
+            >
+              Ready to build something that{' '}
+              <span className="font-serif italic font-normal text-[var(--accent-primary)]">
+                actually ships
+              </span>?
+            </h2>
+            <p className="text-base sm:text-lg text-[var(--text-secondary)] font-normal leading-relaxed">
+              Tell us about your project or learning goals. We reply within 24 hours with concrete technical recommendations, timeline estimates, or cohort details.
+            </p>
           </div>
+        </ScrollReveal>
 
-          {/* Right Column: Interactive Inquiry Form */}
+        {/* Main Grid: Form + Direct WhatsApp & Booking Card */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* Left: Interactive Inquiry Form */}
           <div className="lg:col-span-7">
             <SpotlightCard
-              borderGlowColor="rgba(226, 0, 26, 0.3)"
-              className="p-6 md:p-10 rounded-sm border-[var(--border-base)] bg-[var(--bg-card)]"
+              borderGlowColor="rgba(226, 0, 26, 0.35)"
+              className="p-6 sm:p-8 rounded-2xl border-[var(--border-base)] bg-[var(--bg-card)]/90 backdrop-blur-md shadow-xl"
             >
               {isSubmitted ? (
-                <div className="py-12 flex flex-col items-center text-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
-                    <Check className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />
+                <div className="py-12 text-center space-y-4 font-mono">
+                  <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-[var(--accent-emerald)] flex items-center justify-center mx-auto border border-emerald-500/20">
+                    <CheckCircle2 className="w-6 h-6" />
                   </div>
-                  <h3 className="font-display text-2xl font-bold text-[var(--text-primary)]">
-                    Inquiry Received.
+                  <h3 className="font-display font-bold text-2xl text-[var(--text-primary)]">
+                    Inquiry Received!
                   </h3>
-                  <p className="text-[var(--text-muted)] text-sm max-w-[38ch] font-light">
-                    Our engineering leads review all inquiries within 24 hours. We will reach out to <strong className="text-[var(--text-primary)]">{email}</strong>.
+                  <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-[40ch] mx-auto leading-relaxed">
+                    Thank you, {name}. Our senior engineering team will review your requirements and reach out at <strong className="text-[var(--text-primary)]">{email}</strong> within 24 hours.
                   </p>
                   <button
                     onClick={() => {
+                      sound.playClick(800)
                       setIsSubmitted(false)
                       setName('')
                       setEmail('')
+                      setPhone('')
                       setMessage('')
                     }}
-                    className="mt-4 px-4 py-2 border border-[var(--border-base)] font-mono text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer rounded-xs"
+                    className="btn-ghost mt-4"
                   >
-                    Send Another Dispatch
+                    <span>SEND ANOTHER MESSAGE</span>
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-6 font-mono text-xs">
-                  {/* Inquiry Type Buttons */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Topic Presets */}
                   <div>
-                    <label className="text-[var(--text-secondary)] block mb-2.5 uppercase tracking-wider text-[0.68rem]">
-                      1. Select Inquiry Stream:
+                    <label className="block font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2.5">
+                      Quick Inquiry Presets (Click to autofill):
                     </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      {(
-                        [
-                          { id: 'services', label: 'Services Pod' },
-                          { id: 'training', label: 'Tech Training' },
-                          { id: 'product', label: 'Products' },
-                          { id: 'general', label: 'Other / Hello' },
-                        ] as const
-                      ).map((item) => (
+                    <div className="flex flex-wrap gap-2">
+                      {PRESET_TOPICS.map((preset, idx) => (
                         <button
-                          key={item.id}
+                          key={idx}
                           type="button"
-                          onClick={() => {
-                            sound.playClick(900)
-                            setInquiryType(item.id)
-                          }}
-                          className={`p-2.5 border text-center transition-all cursor-pointer rounded-xs ${
-                            inquiryType === item.id
-                              ? 'bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-bold border-[var(--btn-primary-bg)]'
-                              : 'bg-[var(--bg-surface)] border-[var(--border-base)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-                          }`}
+                          onClick={() => handleSelectPreset(preset)}
+                          className="px-3 py-1.5 rounded-lg border border-[var(--border-base)] bg-[var(--bg-surface)] hover:border-[var(--accent-primary)] hover:bg-[var(--bg-card)] font-mono text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all cursor-pointer text-left"
                         >
-                          {item.label}
+                          {preset.label}
                         </button>
                       ))}
                     </div>
                   </div>
 
-                  {/* Name & Email Fields */}
+                  {/* Input Fields */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[var(--text-secondary)] block mb-2 uppercase tracking-wider text-[0.68rem]">
-                        2. Your Name *
+                      <label className="block font-mono text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                        Your Name *
                       </label>
                       <input
-                        required
                         type="text"
-                        placeholder="Ada Lovelace"
+                        required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-[var(--bg-surface)] border border-[var(--border-base)] p-3 text-[var(--text-primary)] font-mono text-xs focus:outline-none focus:border-[var(--border-hover)] rounded-xs placeholder:text-[var(--text-muted)]"
+                        placeholder="Suraj Nayak"
+                        className="w-full px-4 py-3 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] text-sm text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:outline-none transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="text-[var(--text-secondary)] block mb-2 uppercase tracking-wider text-[0.68rem]">
-                        3. Email Address *
+                      <label className="block font-mono text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                        Email Address *
                       </label>
                       <input
-                        required
                         type="email"
-                        placeholder="ada@company.com"
+                        required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-[var(--bg-surface)] border border-[var(--border-base)] p-3 text-[var(--text-primary)] font-mono text-xs focus:outline-none focus:border-[var(--border-hover)] rounded-xs placeholder:text-[var(--text-muted)]"
+                        placeholder="you@company.com"
+                        className="w-full px-4 py-3 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] text-sm text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:outline-none transition-colors"
                       />
                     </div>
                   </div>
 
-                  {/* Message & Scope Brief */}
                   <div>
-                    <label className="text-[var(--text-secondary)] block mb-2 uppercase tracking-wider text-[0.68rem]">
-                      4. Project Scope / Questions
+                    <label className="block font-mono text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                      Phone Number (Optional / WhatsApp)
                     </label>
-                    <textarea
-                      rows={4}
-                      placeholder="Tell us what you're building, target timelines, or specific questions..."
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="w-full bg-[var(--bg-surface)] border border-[var(--border-base)] p-3 text-[var(--text-primary)] font-mono text-xs focus:outline-none focus:border-[var(--border-hover)] rounded-xs placeholder:text-[var(--text-muted)] leading-relaxed resize-none"
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+91 98765 43210"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] text-sm text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:outline-none transition-colors"
                     />
                   </div>
 
-                  {/* Submit Button */}
+                  <div>
+                    <label className="block font-mono text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
+                      Project Details / Learning Goals *
+                    </label>
+                    <textarea
+                      required
+                      rows={5}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Tell us what you want to build or what training program you're interested in..."
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] text-sm text-[var(--text-primary)] focus:border-[var(--accent-primary)] focus:outline-none transition-colors font-mono text-xs leading-relaxed"
+                    />
+                  </div>
+
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    onMouseEnter={() => setCursorLabel('SHIP')}
-                    onMouseLeave={() => setCursorLabel(null)}
-                    className="btn-primary w-full justify-center py-3 text-xs tracking-widest font-bold cursor-pointer disabled:opacity-50"
+                    className="btn-primary w-full justify-center py-3.5 text-sm cursor-pointer"
                   >
                     {isSubmitting ? (
-                      <span>TRANSMITTING DISPATCH...</span>
+                      <span>TRANSMITTING INQUIRY...</span>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        <span>INITIATE ENGAGEMENT</span>
-                        <Send className="w-3.5 h-3.5" />
-                      </div>
+                      <>
+                        <span>TRANSMIT INQUIRY</span>
+                        <Send className="w-4 h-4" />
+                      </>
                     )}
                   </button>
                 </form>
               )}
             </SpotlightCard>
+          </div>
+
+          {/* Right: WhatsApp Fast-Track & Discovery Call Booking */}
+          <div className="lg:col-span-5 space-y-6">
+            {/* WhatsApp Card */}
+            <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)]/90 backdrop-blur-md space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-[#25D366]/15 text-[#25D366]">
+                  <MessageCircle className="w-5 h-5 fill-current" />
+                </div>
+                <div>
+                  <h3 className="font-display font-bold text-base sm:text-lg text-[var(--text-primary)]">
+                    Fast-Track WhatsApp Chat
+                  </h3>
+                  <p className="text-xs text-[var(--text-muted)] font-mono">
+                    Direct conversation with Suraj Nayak
+                  </p>
+                </div>
+              </div>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
+                Prefer immediate messaging? Skip the email queue and connect directly with our founder on WhatsApp.
+              </p>
+              <button
+                onClick={handleSendWhatsApp}
+                className="w-full py-3 px-4 rounded-xl bg-[#25D366] text-black font-mono font-bold text-xs hover:bg-[#20bd5a] transition-all flex items-center justify-between shadow-md cursor-pointer"
+              >
+                <span>OPEN WHATSAPP CHAT</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Discovery Call Card */}
+            <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)]/90 backdrop-blur-md space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-[var(--accent-glow)] text-[var(--accent-primary)]">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-display font-bold text-base sm:text-lg text-[var(--text-primary)]">
+                    Book a 15-Min Discovery Call
+                  </h3>
+                  <p className="text-xs text-[var(--text-muted)] font-mono">
+                    Architecture & sprint scope review
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
+                Schedule a 15-minute video call to walk through technical architecture, timelines, or cohort curriculum.
+              </p>
+
+              <button
+                onClick={() => {
+                  sound.playClick(900)
+                  window.open('https://cal.com', '_blank')
+                }}
+                className="w-full py-3 px-4 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] text-xs font-mono font-bold text-[var(--text-primary)] hover:border-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white transition-all flex items-center justify-between cursor-pointer"
+              >
+                <span>SELECT TIME ON CALENDAR</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <div className="space-y-2 pt-2 text-xs font-mono text-[var(--text-muted)] border-t border-[var(--border-base)]">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5 text-[var(--accent-amber)] shrink-0" />
+                  <span>24-Hour Guaranteed Response</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent-emerald)] shrink-0" />
+                  <span>Strict NDA & IP Confidentiality</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail className="w-3.5 h-3.5 text-[var(--accent-cyan)] shrink-0" />
+                  <span>Direct: hello@nayaklabs.com</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

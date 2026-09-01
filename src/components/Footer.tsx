@@ -55,25 +55,25 @@ export function Footer({ onScrollTo }: FooterProps) {
           {/* Left: Copyright */}
           <div className="flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-[var(--accent-primary,#E2001A)]" />
-            <p className="text-[0.68rem] tracking-wider text-[var(--text-secondary)]">
+            <p className="text-xs tracking-wider text-[var(--text-secondary)]">
               NAYAK LABS © 2026 — ENGINEERED TO SHIP
             </p>
           </div>
 
           {/* Theme Quick Switcher */}
-          <div className="flex items-center gap-4 text-[0.62rem]">
+          <div className="flex items-center gap-4 text-xs">
             <button
               onClick={() => toggleThemeMode()}
-              className="flex items-center gap-1.5 px-2 py-1 border border-[var(--border-base)] rounded-xs hover:text-[var(--text-primary)] transition-colors cursor-pointer bg-transparent"
+              className="flex items-center gap-1.5 px-2.5 py-1 border border-[var(--border-base)] rounded-md hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors cursor-pointer bg-[var(--bg-surface)]"
             >
               {themeMode === 'dark' ? (
                 <>
-                  <Sun className="w-3 h-3 text-amber-400" />
+                  <Sun className="w-3.5 h-3.5 text-amber-400" />
                   <span>LIGHT MODE</span>
                 </>
               ) : (
                 <>
-                  <Moon className="w-3 h-3 text-blue-600" />
+                  <Moon className="w-3.5 h-3.5 text-blue-600" />
                   <span>DARK MODE</span>
                 </>
               )}
@@ -92,7 +92,7 @@ export function Footer({ onScrollTo }: FooterProps) {
                 <button
                   key={t.id}
                   onClick={() => setAccentTheme(t.id as AccentTheme)}
-                  className={`px-1.5 py-0.5 border rounded-xs transition-colors cursor-pointer ${
+                  className={`px-2 py-0.5 border rounded-md transition-colors cursor-pointer text-xs ${
                     accentTheme === t.id
                       ? 'border-[var(--btn-primary-bg)] text-[var(--text-primary)] font-bold bg-[var(--bg-surface)]'
                       : 'border-[var(--border-base)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
@@ -110,7 +110,7 @@ export function Footer({ onScrollTo }: FooterProps) {
               sound.playClick(800)
               onScrollTo('home')
             }}
-            className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors cursor-pointer bg-transparent border-none"
+            className="flex items-center gap-1 hover:text-[var(--text-primary)] transition-colors cursor-pointer bg-transparent border-none text-xs"
           >
             <span>TOP</span>
             <ArrowUp className="w-3.5 h-3.5" />
