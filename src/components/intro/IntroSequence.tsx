@@ -194,39 +194,71 @@ export function IntroSequence({ onHandoffStart, onComplete }: IntroSequenceProps
         SKIP INTRO →
       </button>
 
-      {/* Top half-panel */}
+      {/* Top half-panel with fluted frosted glass caustics */}
       <div
         ref={topPanelRef}
-        className="absolute inset-x-0 top-0 bg-[#06070A] z-20 border-b border-white/[0.06] overflow-hidden"
+        className="absolute inset-x-0 top-0 bg-[#07080E] z-20 border-b border-white/[0.1] overflow-hidden backdrop-blur-2xl"
         style={{ height: '50%', willChange: 'transform' }}
       >
-        {/* Subtle engineering telemetry watermark in top panel */}
-        <div className="absolute top-6 left-6 font-mono text-[10px] text-white/20 tracking-widest pointer-events-none">
-          LAT 12.9716° N · LNG 77.5946° E // NAYAK LABS STUDIO
+        {/* Vertical fluted light rays */}
+        <div
+          className="absolute inset-0 opacity-40 pointer-events-none"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(90deg, transparent 0px, transparent 48px, rgba(255, 255, 255, 0.02) 48px, rgba(255, 255, 255, 0.02) 50px)',
+          }}
+        />
+        {/* Ambient top aurora light pool */}
+        <div
+          className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[80vw] h-[100%] rounded-full opacity-35 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.45) 0%, rgba(0, 210, 255, 0.25) 40%, transparent 75%)',
+            filter: 'blur(50px)',
+          }}
+        />
+        {/* Telemetry watermark */}
+        <div className="absolute top-6 left-6 font-mono text-[10px] text-white/30 tracking-widest pointer-events-none flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00D2FF] shadow-[0_0_8px_#00D2FF] animate-pulse" />
+          <span>LAT 12.9716° N · LNG 77.5946° E // NAYAK LABS CHROMATIC ENGINE</span>
         </div>
       </div>
 
-      {/* Bottom half-panel */}
+      {/* Bottom half-panel with fluted frosted glass caustics */}
       <div
         ref={bottomPanelRef}
-        className="absolute inset-x-0 bottom-0 bg-[#06070A] z-20 border-t border-white/[0.06] overflow-hidden"
+        className="absolute inset-x-0 bottom-0 bg-[#07080E] z-20 border-t border-white/[0.1] overflow-hidden backdrop-blur-2xl"
         style={{ height: '50%', willChange: 'transform' }}
       >
-        {/* Telemetry watermark in bottom panel */}
-        <div className="absolute bottom-6 left-6 font-mono text-[10px] text-white/20 tracking-widest pointer-events-none">
-          AUTONOMOUS RUNTIMES · FULLSTACK SYSTEMS · 2026
+        {/* Vertical fluted light rays */}
+        <div
+          className="absolute inset-0 opacity-40 pointer-events-none"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(90deg, transparent 0px, transparent 48px, rgba(255, 255, 255, 0.02) 48px, rgba(255, 255, 255, 0.02) 50px)',
+          }}
+        />
+        {/* Ambient bottom ember/crimson aurora light pool */}
+        <div
+          className="absolute -bottom-[50%] left-1/2 -translate-x-1/2 w-[80vw] h-[100%] rounded-full opacity-30 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(255, 107, 0, 0.45) 0%, rgba(226, 0, 26, 0.3) 40%, transparent 75%)',
+            filter: 'blur(50px)',
+          }}
+        />
+        {/* Telemetry watermark */}
+        <div className="absolute bottom-6 left-6 font-mono text-[10px] text-white/30 tracking-widest pointer-events-none flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] shadow-[0_0_8px_#FF6B00] animate-pulse" />
+          <span>AUTONOMOUS RUNTIMES · FROSTED SYSTEMS · 2026</span>
         </div>
       </div>
 
-      {/* Laser seam streak (Liquid Specular Cut) */}
+      {/* Chromatic Laser Seam Streak (Prismatic Liquid Cut) */}
       <div
         ref={seamRef}
         className="absolute inset-x-0 z-30 pointer-events-none origin-center"
         style={{
           top: '50%',
-          height: '1.5px',
-          background: 'linear-gradient(90deg, transparent 0%, #FFFFFF 25%, #E2001A 50%, #00D2FF 70%, transparent 100%)',
-          boxShadow: '0 0 16px rgba(255,255,255,0.9), 0 0 32px rgba(226,0,26,0.7)',
+          height: '2px',
+          background: 'linear-gradient(90deg, transparent 0%, #00D2FF 15%, #FFFFFF 35%, #FF6B00 65%, #8B5CF6 85%, transparent 100%)',
+          boxShadow: '0 0 20px rgba(255,255,255,0.9), 0 0 40px rgba(0,210,255,0.7), 0 0 50px rgba(255,107,0,0.6)',
           transform: 'translateY(-50%)',
           willChange: 'transform, opacity',
         }}
@@ -239,15 +271,23 @@ export function IntroSequence({ onHandoffStart, onComplete }: IntroSequenceProps
         style={{ willChange: 'opacity' }}
       />
 
-      {/* Centered Typography container */}
+      {/* Centered Typography container with chromatic backdrop aura */}
       <div className="absolute inset-0 z-40 flex items-center justify-center px-6 pointer-events-none">
+        <div
+          className="absolute w-[500px] h-[250px] rounded-full opacity-40 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.35) 0%, rgba(0, 210, 255, 0.2) 45%, transparent 70%)',
+            filter: 'blur(60px)',
+          }}
+        />
         <h2
           ref={textRef}
-          className="font-display font-medium text-center tracking-tight text-white/95"
+          className="font-display font-medium text-center tracking-tight text-white relative z-10"
           style={{
             fontSize: 'clamp(1.85rem, 4.4vw, 3.4rem)',
             letterSpacing: '-0.035em',
             lineHeight: 1.15,
+            textShadow: '0 0 30px rgba(255,255,255,0.3)',
             willChange: 'transform, opacity, filter',
           }}
         />

@@ -22,11 +22,14 @@ export default function ProductsPage() {
       {/* Unified Gradient Glassmorphic Navbar */}
       <Navbar />
 
+      {/* Ambient Chromatic Aurora Light Pool */}
+      <div className="absolute top-20 left-1/4 w-[600px] h-[350px] rounded-full opacity-35 dark:opacity-25 pointer-events-none -z-10" style={{ background: 'radial-gradient(circle at center, rgba(226, 0, 26, 0.35) 0%, rgba(139, 92, 246, 0.2) 45%, transparent 70%)', filter: 'blur(70px)' }} />
+
       {/* Hero Banner with Signature Products Clip-Wipe Reveal */}
-      <main className="pt-24 sm:pt-28 pb-24 px-6 md:px-10 max-w-[1240px] mx-auto">
+      <main className="pt-24 sm:pt-28 pb-24 px-6 md:px-10 max-w-[1240px] mx-auto relative z-10">
         <ScrollReveal variant="clip-wipe">
           <div className="max-w-3xl mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-pill font-mono text-xs text-[var(--accent-primary)] mb-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-pill font-mono text-xs text-[var(--accent-primary)] mb-6 shadow-xs">
               <Sparkles className="w-3.5 h-3.5" />
               <span>FLAGSHIP IN-HOUSE PLATFORMS & RUNTIMES</span>
             </div>

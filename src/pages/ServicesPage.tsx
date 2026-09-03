@@ -111,11 +111,14 @@ export default function ServicesPage() {
       {/* Unified Gradient Glassmorphic Navbar */}
       <Navbar />
 
-      <main className="pt-24 sm:pt-28 pb-24 px-6 md:px-10 max-w-[1240px] mx-auto">
+      {/* Ambient Chromatic Emerald / Cyan Aurora Light Pool */}
+      <div className="absolute top-20 right-1/4 w-[600px] h-[350px] rounded-full opacity-35 dark:opacity-25 pointer-events-none -z-10" style={{ background: 'radial-gradient(circle at center, rgba(0, 245, 160, 0.35) 0%, rgba(0, 210, 255, 0.2) 45%, transparent 70%)', filter: 'blur(70px)' }} />
+
+      <main className="pt-24 sm:pt-28 pb-24 px-6 md:px-10 max-w-[1240px] mx-auto relative z-10">
         {/* Hero Stage with Line-Stagger Reveal */}
         <ScrollReveal variant="line-stagger">
           <div className="max-w-3xl mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-pill font-mono text-xs text-[var(--accent-emerald)] mb-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-pill font-mono text-xs text-[var(--accent-emerald)] mb-6 shadow-xs">
               <Sparkles className="w-3.5 h-3.5" />
               <span>ENGINEERING CAPABILITIES & CLIENT PODS</span>
             </div>

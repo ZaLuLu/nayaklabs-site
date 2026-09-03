@@ -120,19 +120,22 @@ export default function AcademicsPage() {
     <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)] relative selection:bg-[var(--accent-primary)] selection:text-white transition-colors duration-300">
       <GrainOverlay />
 
+      {/* Ambient Chromatic Cyan / Violet Aurora Light Pool */}
+      <div className="absolute top-20 left-1/3 w-[600px] h-[350px] rounded-full opacity-35 dark:opacity-25 pointer-events-none -z-10" style={{ background: 'radial-gradient(circle at center, rgba(0, 210, 255, 0.35) 0%, rgba(139, 92, 246, 0.25) 45%, transparent 70%)', filter: 'blur(70px)' }} />
+
       {/* Unified Gradient Glassmorphic Navbar */}
       <Navbar />
 
-      <main className="pt-24 sm:pt-28 pb-24 px-6 md:px-10 max-w-[1240px] mx-auto">
-        {/* Hero Banner with Kinetic Reveal */}
+      <main className="pt-24 sm:pt-28 pb-24 px-6 md:px-10 max-w-[1240px] mx-auto relative z-10">
+        {/* Hero Section with Signature Academics Line-Stagger Reveal */}
         <ScrollReveal variant="line-stagger">
           <div className="max-w-3xl mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-pill font-mono text-xs text-[var(--accent-cyan)] mb-6">
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>ENGINEERING FELLOWSHIP ACADEMY</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-pill font-mono text-xs text-[var(--accent-cyan)] mb-6 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>FELLOWSHIP COHORTS & ACADEMY</span>
             </div>
             <h1 className="text-section-h md:text-5xl font-display font-bold text-[var(--text-primary)] tracking-tight mb-6">
-              Skip the tutorials. Master production engineering.
+              Engineering mastery through production builds.
             </h1>
             <p className="font-body text-base md:text-lg text-[var(--text-secondary)] leading-relaxed mb-8">
               An elite 6-week intensive engineering fellowship for serious developers. Strictly 12 seats. Direct architectural mentorship, weekly production code reviews, and live software deployed by Week 6.

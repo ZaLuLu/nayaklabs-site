@@ -279,29 +279,12 @@ export function Hero3D({ visible = true, onScrollToDivision }: Hero3DProps) {
 
       <div className="relative z-10 max-w-[1240px] w-full mx-auto px-6 md:px-10 h-full flex flex-col items-center justify-center">
         {/* =========================================================================
-            STAGE 1: MONUMENTAL 3D WORDMARK (Centrally Anchored)
+            STAGE 1: MONUMENTAL 3D WORDMARK (Laser-Focused & Pristine)
             ========================================================================= */}
         <div
           ref={wordmarkStageRef}
           className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-6"
         >
-          {/* Subtle Stage 1 Studio Eyebrow */}
-          <div
-            ref={eyebrowRef}
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-pill font-mono text-[11px] text-[var(--text-muted)] mb-4 pointer-events-auto shadow-xs will-change-transform"
-          >
-            <span
-              className="w-2 h-2 rounded-full transition-colors duration-300 shadow-sm"
-              style={{
-                backgroundColor: activeAccent.color,
-                boxShadow: `0 0 10px ${activeAccent.color}`,
-              }}
-            />
-            <span className="tracking-widest uppercase font-semibold">
-              AI PRODUCT STUDIO & RESEARCH PODS
-            </span>
-          </div>
-
           <h1
             ref={wordmarkRef}
             className="font-display font-bold text-hero text-[var(--text-primary)] tracking-tight will-change-transform drop-shadow-sm select-none perspective-1200 flex items-center justify-center"
@@ -324,7 +307,7 @@ export function Hero3D({ visible = true, onScrollToDivision }: Hero3DProps) {
                 className="inline-block transition-colors duration-300 font-display"
                 style={{
                   color: activeAccent.color,
-                  textShadow: `0 0 24px ${activeAccent.color}`,
+                  textShadow: `0 0 28px ${activeAccent.color}`,
                 }}
               >
                 .
@@ -337,14 +320,13 @@ export function Hero3D({ visible = true, onScrollToDivision }: Hero3DProps) {
             </button>
           </h1>
 
-          {/* Initial Scroll Prompt */}
+          {/* Minimalist Scroll Prompt */}
           <div
             ref={scrollPromptRef}
-            className="absolute bottom-12 flex flex-col items-center gap-2 font-mono text-[11px] text-[var(--text-muted)] tracking-widest uppercase pointer-events-none"
+            className="absolute bottom-10 flex flex-col items-center gap-2 font-mono text-[11px] text-[var(--text-muted)] tracking-widest uppercase pointer-events-none opacity-80"
           >
-            <span>SCROLL TO EXPLORE</span>
             <ArrowDown
-              className="w-3.5 h-3.5 animate-bounce"
+              className="w-4 h-4 animate-bounce"
               style={{ color: activeAccent.color }}
             />
           </div>
@@ -384,7 +366,7 @@ export function Hero3D({ visible = true, onScrollToDivision }: Hero3DProps) {
               to="/products"
               onMouseMove={(e) => handleCardMouseMove(e, 0)}
               onMouseLeave={() => handleCardMouseLeave(0)}
-              className="glass-panel specular-border p-5 sm:p-6 rounded-2xl flex flex-col justify-between group hover:border-[var(--accent-primary)] transition-all duration-200 cursor-pointer shadow-md will-change-transform"
+              className="frosted-slab specular-border p-5 sm:p-6 rounded-2xl flex flex-col justify-between group hover:border-[var(--accent-primary)] transition-all duration-200 cursor-pointer shadow-md will-change-transform"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
@@ -423,7 +405,7 @@ export function Hero3D({ visible = true, onScrollToDivision }: Hero3DProps) {
               to="/services"
               onMouseMove={(e) => handleCardMouseMove(e, 1)}
               onMouseLeave={() => handleCardMouseLeave(1)}
-              className="glass-panel specular-border p-5 sm:p-6 rounded-2xl flex flex-col justify-between group hover:border-[var(--accent-emerald)] transition-all duration-200 cursor-pointer shadow-md will-change-transform"
+              className="frosted-slab specular-border p-5 sm:p-6 rounded-2xl flex flex-col justify-between group hover:border-[var(--accent-emerald)] transition-all duration-200 cursor-pointer shadow-md will-change-transform"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
@@ -462,7 +444,7 @@ export function Hero3D({ visible = true, onScrollToDivision }: Hero3DProps) {
               to="/academics"
               onMouseMove={(e) => handleCardMouseMove(e, 2)}
               onMouseLeave={() => handleCardMouseLeave(2)}
-              className="glass-panel specular-border p-5 sm:p-6 rounded-2xl flex flex-col justify-between group hover:border-[var(--accent-cyan)] transition-all duration-200 cursor-pointer shadow-md will-change-transform"
+              className="frosted-slab specular-border p-5 sm:p-6 rounded-2xl flex flex-col justify-between group hover:border-[var(--accent-cyan)] transition-all duration-200 cursor-pointer shadow-md will-change-transform"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
