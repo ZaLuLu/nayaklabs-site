@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { ScrollReveal } from './ScrollReveal'
 import { SectionEyebrow } from './SectionEyebrow'
-import { sound } from '../utils/audioEngine'
 import { Mail, ArrowUpRight, Copy, Check } from 'lucide-react'
 
 function InstagramIcon({ className = 'w-6 h-6' }: { className?: string }) {
@@ -46,7 +45,6 @@ export function Contact() {
   const handleCopyEmail = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    sound.playSuccess(0.08)
     navigator.clipboard.writeText('hello@nayaklabs.com')
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -57,8 +55,8 @@ export function Contact() {
       id: 'email',
       name: 'Gmail / Direct Email',
       handle: 'hello@nayaklabs.com',
-      badge: '24-HR GUARANTEED RESPONSE',
-      desc: 'Send an inquiry directly to founder engineering inbox. Ideal for custom RFPs, sprint briefs, and enterprise agreements.',
+      badge: 'DIRECT FOUNDER INBOX',
+      desc: 'Send an inquiry directly to the founder engineering inbox. Ideal for custom technical reviews, architecture scopes, and enterprise builds.',
       actionText: 'COMPOSE EMAIL',
       href: 'mailto:hello@nayaklabs.com?subject=Project%20Inquiry%20%E2%80%94%20Nayak%20Labs',
       icon: Mail,
@@ -121,7 +119,7 @@ export function Contact() {
               Let’s build together.
             </h2>
             <p className="font-body text-base text-[var(--text-secondary)] leading-relaxed">
-              No endless automated forms or agency account managers. Reach out directly through any of our 3 official communication channels.
+              No endless automated forms or agency account managers. Reach out directly through any of our official communication channels.
             </p>
           </div>
         </ScrollReveal>
@@ -136,14 +134,13 @@ export function Contact() {
                   href={ch.href}
                   target={ch.id === 'email' ? undefined : '_blank'}
                   rel={ch.id === 'email' ? undefined : 'noopener noreferrer'}
-                  onClick={() => sound.playClick(850 + idx * 50)}
-                  className="group relative flex flex-col justify-between h-full p-8 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-card-hover)] transition-all duration-300 shadow-sm cursor-pointer select-none"
+                  className="group relative flex flex-col justify-between h-full p-8 rounded-2xl glass-panel select-none"
                 >
                   <div>
                     {/* Top Row: Icon & Badge */}
                     <div className="flex items-center justify-between gap-2 mb-6">
                       <div
-                        className="p-3 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] text-[var(--text-primary)] group-hover:scale-110 transition-transform duration-200"
+                        className="p-3 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] text-[var(--text-primary)] group-hover:scale-110 transition-transform duration-200 shadow-sm"
                         style={{ color: ch.accentColor }}
                       >
                         <IconComponent className="w-6 h-6" />

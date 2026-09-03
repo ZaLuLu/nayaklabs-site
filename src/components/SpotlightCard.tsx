@@ -15,8 +15,8 @@ interface SpotlightCardProps {
 export function SpotlightCard({
   children,
   className = '',
-  spotlightColor = 'rgba(255, 255, 255, 0.04)',
-  borderGlowColor = 'rgba(255, 255, 255, 0.22)',
+  spotlightColor = 'var(--spotlight-default)',
+  borderGlowColor = 'var(--spotlight-border-default)',
   enable3DTilt = false,
   onClick,
   onMouseEnter,

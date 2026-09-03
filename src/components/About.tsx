@@ -3,7 +3,6 @@ import { ScrollReveal } from './ScrollReveal'
 import { SectionEyebrow } from './SectionEyebrow'
 import { Sparkles, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { sound } from '../utils/audioEngine'
 
 export function About() {
   return (
@@ -35,15 +34,14 @@ export function About() {
             Nayak Labs exists to counter this reality. We operate as a high-density product studio that prioritizes working software over pitch decks, production code over theoretical roadmaps, and verifiable outcomes over vague promises.
           </p>
           <p className="font-body text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
-            Whether engineering autonomous multi-agent pipelines, shipping custom SaaS platforms in 18-day fixed sprints, or mentoring builders in our fellowship, we deliver 100% intellectual property ownership and zero compromises.
+            Whether engineering autonomous multi-agent pipelines, shipping custom web platforms, or mentoring builders in our fellowship, we deliver 100% intellectual property ownership and zero compromises.
           </p>
         </div>
       </ScrollReveal>
 
       <ScrollReveal delay={0.2}>
         <div
-          className="p-8 sm:p-10 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] shadow-md relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-8 transition-colors duration-300"
-          style={{ boxShadow: 'var(--card-shadow)' }}
+          className="glass-panel p-8 sm:p-10 rounded-2xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-8 transition-colors duration-300"
         >
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 font-mono text-xs text-[var(--accent-primary)] mb-3 uppercase tracking-wider font-semibold">
@@ -57,10 +55,9 @@ export function About() {
 
           <Link
             to="/services"
-            onClick={() => sound.playClick(850)}
             className="btn-primary py-3 px-5 text-xs font-body font-semibold inline-flex items-center gap-2 shrink-0"
           >
-            <span>DISCUSS A SPRINT</span>
+            <span>EXPLORE SERVICES</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

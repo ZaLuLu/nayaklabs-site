@@ -2,18 +2,19 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ScrollReveal } from '../ScrollReveal'
 import { SectionEyebrow } from '../SectionEyebrow'
-import { sound } from '../../utils/audioEngine'
 import {
   ArrowRight,
   Terminal,
-  Activity,
+  Globe,
   Cpu,
   GraduationCap,
   Sparkles,
   CheckCircle2,
-  Clock,
-  ShieldCheck,
-  Zap,
+  Database,
+  Bot,
+  Layers,
+  Palette,
+  Code2,
 } from 'lucide-react'
 
 export function PillarStack() {
@@ -44,7 +45,7 @@ export function PillarStack() {
                 What we build when no one’s watching.
               </h2>
               <p className="font-body text-base text-[var(--text-secondary)] leading-relaxed">
-                We engineer autonomous runtime telemetry, visual developer sandboxes, and indexing tools used by technical teams worldwide. 100% free, production-tested, and open source.
+                We engineer autonomous runtime telemetry, visual developer sandboxes, and 3D indexing tools used by technical teams worldwide. 100% free, production-tested, and open source.
               </p>
             </div>
           </ScrollReveal>
@@ -53,7 +54,7 @@ export function PillarStack() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-10">
             {/* Product 1: DI Notes Visualizer */}
             <ScrollReveal delay={0.12}>
-              <div className="p-7 sm:p-8 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-all duration-300 flex flex-col justify-between h-full shadow-sm">
+              <div className="glass-panel p-7 sm:p-8 rounded-2xl flex flex-col justify-between h-full">
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
                     <div className="flex items-center gap-2.5">
@@ -65,12 +66,12 @@ export function PillarStack() {
                       </h3>
                     </div>
                     <span className="font-mono text-[11px] px-2 py-0.5 rounded border border-[var(--border-base)] bg-[var(--bg-surface)] text-[var(--accent-primary)]">
-                      v2.4 STABLE
+                      v2.5 STABLE
                     </span>
                   </div>
 
                   <p className="font-body text-sm text-[var(--text-secondary)] leading-relaxed mb-6">
-                    Real-time memory allocation, pointer swaps, and recursion call-stack visualizer. Step forward frame by frame, inspect runtime variables, and duel algorithms in real time.
+                    Real-time memory allocation, pointer swaps, recursion trees, and call stack visualizer. Step forward, inspect runtime variables, and duel algorithms in real time.
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-8 font-mono text-[11px]">
@@ -90,7 +91,6 @@ export function PillarStack() {
                   <span className="font-mono text-xs text-[var(--text-muted)]">Interactive Workbench</span>
                   <Link
                     to="/products"
-                    onClick={() => sound.playClick(850)}
                     className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--accent-primary)] hover:underline font-bold"
                   >
                     <span>LAUNCH SANDBOX</span>
@@ -100,49 +100,48 @@ export function PillarStack() {
               </div>
             </ScrollReveal>
 
-            {/* Product 2: EventMesh Radar */}
+            {/* Product 2: EventMesh 3D Radar */}
             <ScrollReveal delay={0.16}>
-              <div className="p-7 sm:p-8 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-all duration-300 flex flex-col justify-between h-full shadow-sm">
+              <div className="glass-panel p-7 sm:p-8 rounded-2xl flex flex-col justify-between h-full">
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
                     <div className="flex items-center gap-2.5">
                       <div className="p-2 rounded-lg bg-[var(--accent-emerald)]/10 text-[var(--accent-emerald)]">
-                        <Activity className="w-4 h-4" />
+                        <Globe className="w-4 h-4" />
                       </div>
                       <h3 className="font-display font-bold text-xl text-[var(--text-primary)]">
-                        EventMesh Radar
+                        EventMesh 3D Radar
                       </h3>
                     </div>
                     <span className="font-mono text-[11px] px-2 py-0.5 rounded border border-[var(--border-base)] bg-[var(--bg-surface)] text-[var(--accent-emerald)]">
-                      LIVE RADAR
+                      3D TELEMETRY
                     </span>
                   </div>
 
                   <p className="font-body text-sm text-[var(--text-secondary)] leading-relaxed mb-6">
-                    Global hackathon and technical summit telemetry engine. Real-time verification, direct calendar ICS sync, and prize pool analytics.
+                    Interactive rotatable 3D canvas globe tracking global developer summits, AI hackathons, and archive benchmarks across major tech cities worldwide.
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-8 font-mono text-[11px]">
                     <span className="px-2.5 py-1 rounded-md bg-[var(--bg-surface)] border border-[var(--border-base)] text-[var(--text-muted)]">
-                      #LiveTelemetry
+                      #3DGlobeMesh
                     </span>
                     <span className="px-2.5 py-1 rounded-md bg-[var(--bg-surface)] border border-[var(--border-base)] text-[var(--text-muted)]">
-                      #SummitTracker
+                      #SummitRadar
                     </span>
                     <span className="px-2.5 py-1 rounded-md bg-[var(--bg-surface)] border border-[var(--border-base)] text-[var(--text-muted)]">
-                      #CalendarSync
+                      #RealtimePins
                     </span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-[var(--border-base)] flex items-center justify-between">
-                  <span className="font-mono text-xs text-[var(--text-muted)]">Live Telemetry Feed</span>
+                  <span className="font-mono text-xs text-[var(--text-muted)]">Live 3D Globe Feed</span>
                   <Link
                     to="/products"
-                    onClick={() => sound.playClick(850)}
                     className="inline-flex items-center gap-1.5 font-mono text-xs text-[var(--accent-emerald)] hover:underline font-bold"
                   >
-                    <span>EXPLORE RADAR</span>
+                    <span>EXPLORE 3D GLOBE</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
@@ -154,19 +153,18 @@ export function PillarStack() {
           <ScrollReveal delay={0.2}>
             <Link
               to="/products"
-              onClick={() => sound.playClick(900)}
-              className="p-6 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-surface)]/60 hover:bg-[var(--bg-surface)] hover:border-[var(--accent-primary)] transition-all duration-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group cursor-pointer"
+              className="glass-panel p-6 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 group cursor-pointer"
             >
               <div className="flex items-center gap-3.5">
-                <div className="p-3 rounded-xl bg-[var(--accent-primary)] text-white">
-                  <Zap className="w-5 h-5" />
+                <div className="p-3 rounded-xl bg-[var(--accent-primary)] text-white shadow-sm">
+                  <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="font-display font-bold text-base text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">
                     Click to Open Full Interactive Products Suite
                   </div>
                   <div className="font-body text-xs text-[var(--text-secondary)]">
-                    Access real-time algorithm runs, radar sync, and inspect live production telemetry.
+                    Access real-time algorithm runs, rotatable 3D globe telemetry, and developer benchmarks.
                   </div>
                 </div>
               </div>
@@ -193,7 +191,7 @@ export function PillarStack() {
             </ScrollReveal>
             <ScrollReveal delay={0.05}>
               <span className="font-mono text-xs text-[var(--accent-emerald)] font-bold tracking-wider uppercase">
-                18-DAY SPRINT DELIVERY
+                ENGINEERING CAPABILITIES
               </span>
             </ScrollReveal>
           </div>
@@ -201,90 +199,106 @@ export function PillarStack() {
           <ScrollReveal delay={0.08}>
             <div className="max-w-3xl mb-12">
               <h2 className="text-section-h font-display font-bold text-[var(--text-primary)] tracking-tight leading-[1.1] mb-4">
-                Your team, minus the overhead.
+                Software built with absolute engineering rigor.
               </h2>
               <p className="font-body text-base text-[var(--text-secondary)] leading-relaxed">
-                We partner with venture-backed founders and engineering executives to architect, code, and deploy production AI pipelines and full-stack web applications in dedicated 18-day fixed sprint pods.
+                We partner with venture-backed tech founders and product teams to architect, code, and deploy production AI pipelines and high-scale full-stack applications.
               </p>
             </div>
           </ScrollReveal>
 
-          {/* Three Sprint Guarantees */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+          {/* 4 Core Service Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
             <ScrollReveal delay={0.12}>
-              <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] flex flex-col justify-between h-full shadow-sm">
-                <Clock className="w-5 h-5 text-[var(--accent-emerald)] mb-4" />
+              <div className="glass-panel p-6 sm:p-7 rounded-2xl flex flex-col justify-between h-full">
+                <Bot className="w-5 h-5 text-[var(--accent-primary)] mb-4" />
                 <div>
                   <div className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-1">
-                    VELOCITY
+                    AI RUNTIMES
                   </div>
-                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mb-2">
-                    18-Day Delivery
+                  <h3 className="font-display font-bold text-base text-[var(--text-primary)] mb-2">
+                    Autonomous AI Agents & RAG
                   </h3>
                   <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed">
-                    Fixed-timeline execution. Working software deployed to live staging environments by Day 07 and locked for launch on Day 18.
+                    Multi-agent state graphs, hybrid vector search (Qdrant), tool-use schemas, and streaming inference.
                   </p>
                 </div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.16}>
-              <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] flex flex-col justify-between h-full shadow-sm">
-                <ShieldCheck className="w-5 h-5 text-[var(--accent-emerald)] mb-4" />
+              <div className="glass-panel p-6 sm:p-7 rounded-2xl flex flex-col justify-between h-full">
+                <Globe className="w-5 h-5 text-[var(--accent-emerald)] mb-4" />
                 <div>
                   <div className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-1">
-                    OWNERSHIP
+                    PLATFORMS
                   </div>
-                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mb-2">
-                    100% IP Transfer
+                  <h3 className="font-display font-bold text-base text-[var(--text-primary)] mb-2">
+                    High-Scale Web Platforms
                   </h3>
                   <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed">
-                    Zero lock-in or agency retainers. Full Git history, environment secrets, and cloud infrastructure belong completely to your company.
+                    Next.js 15 Server Components, type-safe TypeScript, PostgreSQL schemas, and edge caching.
                   </p>
                 </div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.2}>
-              <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] flex flex-col justify-between h-full shadow-sm">
-                <Cpu className="w-5 h-5 text-[var(--accent-emerald)] mb-4" />
+              <div className="glass-panel p-6 sm:p-7 rounded-2xl flex flex-col justify-between h-full">
+                <Database className="w-5 h-5 text-[var(--accent-cyan)] mb-4" />
                 <div>
                   <div className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-1">
-                    WARRANTY
+                    DISTRIBUTED
                   </div>
-                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mb-2">
-                    30-Day Launch Guarantee
+                  <h3 className="font-display font-bold text-base text-[var(--text-primary)] mb-2">
+                    Real-Time Task Pipelines
                   </h3>
                   <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed">
-                    Post-launch reliability. We own bug fixes, telemetry patches, and edge cases so your team can focus strictly on growth.
+                    Asynchronous task queues (BullMQ/Redis), real-time WebSockets, and resilient scraping engines.
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.24}>
+              <div className="glass-panel p-6 sm:p-7 rounded-2xl flex flex-col justify-between h-full">
+                <Palette className="w-5 h-5 text-[var(--accent-amber)] mb-4" />
+                <div>
+                  <div className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-1">
+                    KINETIC DESIGN
+                  </div>
+                  <h3 className="font-display font-bold text-base text-[var(--text-primary)] mb-2">
+                    Design Systems & Motion
+                  </h3>
+                  <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed">
+                    Bespoke liquid glassmorphic design systems, 60fps GSAP physics, and accessible typography.
                   </p>
                 </div>
               </div>
             </ScrollReveal>
           </div>
 
-          {/* Interactive Estimator Link Trigger */}
-          <ScrollReveal delay={0.22}>
+          {/* Full Services Showcase Action Trigger */}
+          <ScrollReveal delay={0.28}>
             <Link
               to="/services"
-              onClick={() => sound.playClick(900)}
-              className="p-6 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-surface)]/60 hover:bg-[var(--bg-surface)] hover:border-[var(--accent-emerald)] transition-all duration-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group cursor-pointer"
+              className="glass-panel p-6 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 group cursor-pointer"
             >
               <div className="flex items-center gap-3.5">
-                <div className="p-3 rounded-xl bg-[var(--accent-emerald)] text-white">
+                <div className="p-3 rounded-xl bg-[var(--accent-emerald)] text-black font-bold shadow-sm">
                   <Cpu className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="font-display font-bold text-base text-[var(--text-primary)] group-hover:text-[var(--accent-emerald)] transition-colors">
-                    Click to Open Interactive Sprint Estimator & Architecture Pods
+                    Explore Dedicated Services Architecture & Capabilities
                   </div>
                   <div className="font-body text-xs text-[var(--text-secondary)]">
-                    Model your requirements, stack components, timeline budgets, and generate a customized sprint brief.
+                    View technical architecture blueprints, stack breakdowns, and operating deliverables.
                   </div>
                 </div>
               </div>
               <div className="inline-flex items-center gap-2 font-mono text-xs font-bold text-[var(--accent-emerald)] shrink-0">
-                <span>ESTIMATE SPRINT SCOPE</span>
+                <span>VIEW FULL SERVICES SPECIFICATION</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
@@ -306,7 +320,7 @@ export function PillarStack() {
             </ScrollReveal>
             <ScrollReveal delay={0.05}>
               <span className="font-mono text-xs text-[var(--accent-cyan)] font-bold tracking-wider uppercase">
-                6-WEEK ENGINEERING FELLOWSHIP
+                ENGINEERING FELLOWSHIP ACADEMY
               </span>
             </ScrollReveal>
           </div>
@@ -317,43 +331,47 @@ export function PillarStack() {
                 Skip the tutorials. Ship the real thing.
               </h2>
               <p className="font-body text-base text-[var(--text-secondary)] leading-relaxed">
-                A rigorous, code-first engineering cohort for engineers building stateful multi-agent systems, semantic vector search, and high-throughput production infrastructure.
+                An elite 6-week intensive engineering cohort for serious developers. Strictly 12 seats. Direct architectural mentorship, weekly live code reviews, and production software deployed by Week 6.
               </p>
             </div>
           </ScrollReveal>
 
-          {/* 3 Curriculum Pillars */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+          {/* Curriculum Teaser Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             <ScrollReveal delay={0.12}>
-              <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] flex flex-col justify-between h-full shadow-sm">
-                <div className="font-mono text-xs font-bold text-[var(--accent-cyan)] mb-2">
-                  WEEKS 01–02
+              <div className="glass-panel p-6 sm:p-7 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                  <span className="font-mono text-xs text-[var(--accent-cyan)] font-bold">
+                    WEEKS 01–02
+                  </span>
+                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mt-2 mb-2">
+                    Systems & Task Queues
+                  </h3>
+                  <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
+                    TypeScript architecture, Redis Streams, BullMQ task workers, and PostgreSQL index optimization.
+                  </p>
                 </div>
-                <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mb-2">
-                  Foundations & Vector Search
-                </h3>
-                <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
-                  High-dimensional indexing with Qdrant, hybrid sparse-dense retrieval, and semantic reranking pipelines.
-                </p>
-                <div className="flex items-center gap-1.5 text-xs text-[var(--text-primary)] pt-3 border-t border-[var(--border-base)]">
+                <div className="pt-3 border-t border-[var(--border-base)] flex items-center gap-2 text-xs font-mono text-[var(--text-primary)]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent-cyan)]" />
-                  <span>Sub-50ms hybrid search engine</span>
+                  <span>Sub-15ms p95 task worker deployed</span>
                 </div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.16}>
-              <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] flex flex-col justify-between h-full shadow-sm">
-                <div className="font-mono text-xs font-bold text-[var(--accent-cyan)] mb-2">
-                  WEEKS 03–04
+              <div className="glass-panel p-6 sm:p-7 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                  <span className="font-mono text-xs text-[var(--accent-cyan)] font-bold">
+                    WEEKS 03–04
+                  </span>
+                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mt-2 mb-2">
+                    Agentic AI & Vector Search
+                  </h3>
+                  <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
+                    LangGraph multi-agent workflows, tool schemas, Qdrant hybrid search, and streaming guardrails.
+                  </p>
                 </div>
-                <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mb-2">
-                  Autonomous Multi-Agent Systems
-                </h3>
-                <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
-                  Stateful workflow graphs, cyclic error correction, deterministic tool execution, and token budget optimization.
-                </p>
-                <div className="flex items-center gap-1.5 text-xs text-[var(--text-primary)] pt-3 border-t border-[var(--border-base)]">
+                <div className="pt-3 border-t border-[var(--border-base)] flex items-center gap-2 text-xs font-mono text-[var(--text-primary)]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent-cyan)]" />
                   <span>Self-correcting research agent</span>
                 </div>
@@ -361,46 +379,47 @@ export function PillarStack() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.2}>
-              <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] flex flex-col justify-between h-full shadow-sm">
-                <div className="font-mono text-xs font-bold text-[var(--accent-cyan)] mb-2">
-                  WEEKS 05–06
+              <div className="glass-panel p-6 sm:p-7 rounded-2xl flex flex-col justify-between h-full">
+                <div>
+                  <span className="font-mono text-xs text-[var(--accent-cyan)] font-bold">
+                    WEEKS 05–06
+                  </span>
+                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mt-2 mb-2">
+                    Production Capstone Launch
+                  </h3>
+                  <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
+                    Full-scale production deployment, CI/CD, telemetry, live architecture review defense.
+                  </p>
                 </div>
-                <h3 className="font-display font-bold text-lg text-[var(--text-primary)] mb-2">
-                  Distributed Cloud & Scale
-                </h3>
-                <p className="font-body text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
-                  Distributed queue topologies (BullMQ/Redis), streaming SSE latency budgets, authentication, and metered billing.
-                </p>
-                <div className="flex items-center gap-1.5 text-xs text-[var(--text-primary)] pt-3 border-t border-[var(--border-base)]">
+                <div className="pt-3 border-t border-[var(--border-base)] flex items-center gap-2 text-xs font-mono text-[var(--text-primary)]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent-cyan)]" />
-                  <span>Live AI SaaS deployed to prod</span>
+                  <span>Live deployed production platform</span>
                 </div>
               </div>
             </ScrollReveal>
           </div>
 
-          {/* Syllabus Detail Trigger */}
-          <ScrollReveal delay={0.22}>
+          {/* Full Academics Showcase Action Trigger */}
+          <ScrollReveal delay={0.24}>
             <Link
               to="/academics"
-              onClick={() => sound.playClick(900)}
-              className="p-6 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-surface)]/60 hover:bg-[var(--bg-surface)] hover:border-[var(--accent-cyan)] transition-all duration-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group cursor-pointer"
+              className="glass-panel p-6 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 group cursor-pointer"
             >
               <div className="flex items-center gap-3.5">
-                <div className="p-3 rounded-xl bg-[var(--accent-cyan)] text-white">
+                <div className="p-3 rounded-xl bg-[var(--accent-cyan)] text-black font-bold shadow-sm">
                   <GraduationCap className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="font-display font-bold text-base text-[var(--text-primary)] group-hover:text-[var(--accent-cyan)] transition-colors">
-                    Click to Inspect Full Fellowship Curriculum & Apply
+                    Explore 6-Week Fellowship Curriculum & Syllabus
                   </div>
                   <div className="font-body text-xs text-[var(--text-secondary)]">
-                    Review weekly deliverables, prerequisites, admissions process, and cohort dates.
+                    Review weekly code lab specifications, capstone deliverables, and cohort enrollment details.
                   </div>
                 </div>
               </div>
               <div className="inline-flex items-center gap-2 font-mono text-xs font-bold text-[var(--accent-cyan)] shrink-0">
-                <span>VIEW FELLOWSHIP SYLLABUS</span>
+                <span>VIEW COMPLETE SYLLABUS & ADMISSIONS</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>

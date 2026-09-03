@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { sound } from './audioEngine'
 
 export type AccentTheme = 'swiss-red' | 'emerald' | 'cobalt' | 'monochrome'
 export type ThemeMode = 'dark' | 'light'
@@ -12,10 +11,6 @@ interface ThemeContextType {
   toggleTheme: () => void
   accentTheme: AccentTheme
   setAccentTheme: (theme: AccentTheme) => void
-  audioEnabled: boolean
-  soundEnabled: boolean
-  toggleAudio: () => boolean
-  toggleSound: () => boolean
   cursorLabel: string | null
   setCursorLabel: (label: string | null) => void
   activeBrief: string | null
@@ -61,7 +56,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return 'swiss-red'
   })
 
-  const [audioEnabled, setAudioEnabled] = useState<boolean>(sound.isEnabled())
   const [cursorLabel, setCursorLabel] = useState<string | null>(null)
   const [activeBrief, setActiveBrief] = useState<string | null>(null)
 
@@ -80,7 +74,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setThemeMode = (mode: ThemeMode) => {
     setThemeModeState(mode)
-    sound.playClick(950)
   }
 
   const toggleThemeMode = () => {
@@ -90,13 +83,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setAccentTheme = (theme: AccentTheme) => {
     setAccentThemeState(theme)
-    sound.playClick(900)
-  }
-
-  const toggleAudio = () => {
-    const newState = sound.toggle()
-    setAudioEnabled(newState)
-    return newState
   }
 
   return (
@@ -109,10 +95,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         toggleTheme: toggleThemeMode,
         accentTheme,
         setAccentTheme,
-        audioEnabled,
-        soundEnabled: audioEnabled,
-        toggleAudio,
-        toggleSound: toggleAudio,
         cursorLabel,
         setCursorLabel,
         activeBrief,

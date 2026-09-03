@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { sound } from '../utils/audioEngine'
 import { useTheme } from '../utils/themeContext'
 import { ArrowUp, Sun, Moon } from 'lucide-react'
 
@@ -14,7 +13,6 @@ export function Footer({ onScrollTo }: FooterProps) {
   const navigate = useNavigate()
 
   const handleScroll = (id: string) => {
-    sound.playClick(800)
     if (location.pathname === '/') {
       if (onScrollTo) {
         onScrollTo(id)
@@ -42,17 +40,17 @@ export function Footer({ onScrollTo }: FooterProps) {
             <ul className="flex flex-col gap-2.5 text-[var(--text-secondary)] font-body text-xs">
               <li>
                 <Link to="/products" className="hover:text-[var(--text-primary)] transition-colors">
-                  01 / Products
+                  01 / Products (P)
                 </Link>
               </li>
               <li>
                 <Link to="/services" className="hover:text-[var(--text-primary)] transition-colors">
-                  02 / Services
+                  02 / Services (S)
                 </Link>
               </li>
               <li>
                 <Link to="/academics" className="hover:text-[var(--text-primary)] transition-colors">
-                  03 / Academics
+                  03 / Academics (A)
                 </Link>
               </li>
             </ul>
@@ -70,12 +68,12 @@ export function Footer({ onScrollTo }: FooterProps) {
               </li>
               <li>
                 <Link to="/products" className="hover:text-[var(--text-primary)] transition-colors">
-                  EventMesh Radar
+                  EventMesh 3D Radar
                 </Link>
               </li>
               <li>
                 <Link to="/services" className="hover:text-[var(--text-primary)] transition-colors">
-                  Sprint Scope Estimator
+                  Engineering Capabilities
                 </Link>
               </li>
             </ul>
@@ -107,7 +105,7 @@ export function Footer({ onScrollTo }: FooterProps) {
                   onClick={() => handleScroll('contact')}
                   className="hover:text-[var(--text-primary)] transition-colors text-left cursor-pointer"
                 >
-                  Start a Build
+                  Start an Engagement
                 </button>
               </li>
             </ul>
@@ -143,7 +141,7 @@ export function Footer({ onScrollTo }: FooterProps) {
                   rel="noopener noreferrer"
                   className="hover:text-[var(--text-primary)] transition-colors"
                 >
-                  WhatsApp Fast-Track ↗
+                  WhatsApp Direct ↗
                 </a>
               </li>
             </ul>
@@ -154,7 +152,7 @@ export function Footer({ onScrollTo }: FooterProps) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pt-8 font-mono text-xs text-[var(--text-muted)]">
           {/* Copyright */}
           <div className="flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]" />
+            <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)]" />
             <p className="text-xs tracking-wider text-[var(--text-secondary)]">
               NAYAK LABS © 2026 — ENGINEERED TO SHIP
             </p>
@@ -181,7 +179,6 @@ export function Footer({ onScrollTo }: FooterProps) {
 
             <button
               onClick={() => {
-                sound.playClick(900)
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 border border-[var(--border-base)] rounded-xl hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors cursor-pointer bg-[var(--bg-surface)]"

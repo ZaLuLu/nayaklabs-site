@@ -42,6 +42,12 @@ function MainLayout() {
     }
     return false
   })
+  const [heroAwake, setHeroAwake] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('nayak_intro_seen') === 'true'
+    }
+    return false
+  })
 
   // Initialize Lenis smooth scroll + GSAP ticker sync
   useEffect(() => {
@@ -107,8 +113,13 @@ function MainLayout() {
     }
   }, [location.state, introFinished, scrollTo])
 
+  const handleHandoffStart = useCallback(() => {
+    setHeroAwake(true)
+  }, [])
+
   const handleIntroComplete = useCallback(() => {
     setIntroFinished(true)
+    setHeroAwake(true)
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('nayak_intro_seen', 'true')
     }
@@ -118,8 +129,13 @@ function MainLayout() {
     <div className="relative min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)] transition-colors duration-300">
       <GrainOverlay />
 
-      {/* Intro sequence lives as a top overlay — unmounts cleanly on complete */}
-      {!introFinished && <IntroSequence onComplete={handleIntroComplete} />}
+      {/* Intro sequence lives as a top overlay — unmasks Hero in place without layout pop */}
+      {!introFinished && (
+        <IntroSequence
+          onHandoffStart={handleHandoffStart}
+          onComplete={handleIntroComplete}
+        />
+      )}
 
       {/* Main layout is rendered in natural flow so fonts and sizes measure with 100% precision */}
       <div className="relative w-full">
@@ -127,7 +143,7 @@ function MainLayout() {
 
         <main id="home">
           {/* Act 1: Hero Section with Scroll Zoom */}
-          <Hero3D visible={introFinished} onScrollToDivision={scrollTo} />
+          <Hero3D visible={heroAwake || introFinished} onScrollToDivision={scrollTo} />
 
           {/* Act 2: Dedicated Division Sections (P, S, A) */}
           <PillarStack />

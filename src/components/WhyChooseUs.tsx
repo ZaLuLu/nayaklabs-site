@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { ScrollReveal } from './ScrollReveal'
 import { SectionEyebrow } from './SectionEyebrow'
-import { sound } from '../utils/audioEngine'
 import { CheckCircle2, ArrowRight, ShieldCheck, Zap, GitCommit, FileCode, Clock } from 'lucide-react'
 
 interface MilestoneStep {
@@ -20,9 +19,9 @@ const STEPS: MilestoneStep[] = [
     id: 'discovery',
     num: '01',
     title: 'Discovery & System Contracts',
-    timeline: 'Days 01–03',
+    timeline: 'Phase 01',
     badge: 'ARCHITECTURE',
-    desc: 'Deep-dive into your data schema, API topology, LLM latency budgets, and security boundaries. Bilateral NDA and IP transfer agreement executed before first line of code.',
+    desc: 'Deep-dive into your data schema, API topology, latency budgets, and security boundaries. Bilateral NDA and IP transfer agreement executed before the first line of code.',
     deliverables: ['System Architecture Blueprint', 'OpenAPI 3.0 Specs & DB Schemas', 'Executed Bilateral IP Assignment'],
     icon: FileCode,
   },
@@ -30,7 +29,7 @@ const STEPS: MilestoneStep[] = [
     id: 'prototype',
     num: '02',
     title: 'Live Clickable Prototype',
-    timeline: 'Days 04–07',
+    timeline: 'Phase 02',
     badge: 'VERIFICATION',
     desc: 'We deploy an active interactive build to a private staging URL. You click through real screens and validate user flows before production backend logic is finalized.',
     deliverables: ['Live Staging URL Deployed', 'Interactive UX Feedback Review', 'Production API Contracts Locked'],
@@ -40,8 +39,8 @@ const STEPS: MilestoneStep[] = [
     id: 'build',
     num: '03',
     title: 'Production Build & AI Pipelines',
-    timeline: 'Days 08–16',
-    badge: 'CORE SPRINT',
+    timeline: 'Phase 03',
+    badge: 'CORE ENGINEERING',
     desc: 'High-velocity production code. Distributed queues (BullMQ/Redis), agent orchestration graphs, vector search indexes, auth, billing, and automated CI/CD pipeline.',
     deliverables: ['Full-Stack Production Application', 'Self-Correcting LLM Pipelines', 'Test Suites & Load Telemetry'],
     icon: GitCommit,
@@ -50,7 +49,7 @@ const STEPS: MilestoneStep[] = [
     id: 'transfer',
     num: '04',
     title: '100% IP & Asset Transfer',
-    timeline: 'Days 17–18',
+    timeline: 'Phase 04',
     badge: 'OWNERSHIP',
     desc: 'Complete handover of all repositories, secrets, Docker registries, and cloud infrastructure directly to your organization. Zero vendor lock-in or recurring agency fees.',
     deliverables: ['Git Commit History & Repository Ownership', 'Cloud Infrastructure & Secret Transfer', 'Technical Architecture Documentation'],
@@ -59,11 +58,11 @@ const STEPS: MilestoneStep[] = [
   {
     id: 'warranty',
     num: '05',
-    title: '30-Day Launch Warranty',
+    title: 'Active Launch Support',
     timeline: 'Post-Launch',
     badge: 'PEACE OF MIND',
-    desc: 'We stand by what we ship. Includes 30 days of active post-launch bug triage, edge-case monitoring, and telemetry stabilization so your team launches with 100% confidence.',
-    deliverables: ['Guaranteed 24-Hour Bug Fix SLA', 'Telemetry & Error Monitoring', 'Team Onboarding Call'],
+    desc: 'We stand by what we ship. Includes active post-launch bug triage, edge-case monitoring, and telemetry stabilization so your team launches with 100% confidence.',
+    deliverables: ['Guaranteed Bug Fix SLA', 'Telemetry & Error Monitoring', 'Team Onboarding Walkthrough'],
     icon: Clock,
   },
 ]
@@ -82,7 +81,7 @@ export function WhyChooseUs() {
       <div className="max-w-[1240px] mx-auto px-6 md:px-10">
         <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-8 gap-3">
           <ScrollReveal delay={0}>
-            <SectionEyebrow index="04" label="WHY CHOOSE US // 18-DAY SPRINT DELIVERY" />
+            <SectionEyebrow index="04" label="WHY CHOOSE US // ENGINEERING LIFECYCLE" />
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
             <span className="font-mono text-xs text-[var(--accent-primary)] font-bold tracking-wider uppercase">
@@ -103,21 +102,20 @@ export function WhyChooseUs() {
               </span>
             </h2>
             <p className="font-body text-base text-[var(--text-secondary)] leading-relaxed">
-              Every deliverable is locked, tested, and verified before the next begins. Click through the 5 milestones below to inspect our sprint roadmap.
+              Every deliverable is locked, tested, and verified before the next begins. Click through the 5 milestones below to inspect our engineering roadmap.
             </p>
           </div>
         </ScrollReveal>
 
         {/* Linear Stepper Navigation Bar */}
         <ScrollReveal delay={0.12}>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-1.5 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-surface)]/70 backdrop-blur-md mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-1.5 rounded-2xl glass-panel mb-8">
             {STEPS.map((step, idx) => {
               const isActive = activeStepIndex === idx
               return (
                 <button
                   key={step.id}
                   onClick={() => {
-                    sound.playClick(800 + idx * 40)
                     setActiveStepIndex(idx)
                   }}
                   className={`py-3 px-3 rounded-xl font-mono text-xs transition-all flex flex-col items-start gap-1 cursor-pointer text-left ${
@@ -144,8 +142,8 @@ export function WhyChooseUs() {
         </ScrollReveal>
 
         {/* Interactive Active Milestone Panel */}
-        <ScrollReveal delay={0.16}>
-          <div className="p-8 sm:p-10 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] shadow-md transition-all duration-300">
+        <ScrollReveal delay={0.16} variant="depth-scale">
+          <div className="glass-panel specular-border p-8 sm:p-10 rounded-2xl">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: Stage Detail */}
               <div className="lg:col-span-7">
@@ -176,7 +174,7 @@ export function WhyChooseUs() {
                       key={i}
                       className={`h-1.5 rounded-full transition-all duration-300 ${
                         i <= activeStepIndex
-                          ? 'w-8 bg-[var(--accent-primary)]'
+                          ? 'w-8 bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)]'
                           : 'w-2 bg-[var(--border-base)]'
                       }`}
                     />
@@ -204,7 +202,6 @@ export function WhyChooseUs() {
                   </span>
                   <button
                     onClick={() => {
-                      sound.playClick(900)
                       setActiveStepIndex((prev) => (prev + 1) % STEPS.length)
                     }}
                     className="font-mono text-xs font-bold text-[var(--accent-primary)] hover:underline inline-flex items-center gap-1 cursor-pointer"
