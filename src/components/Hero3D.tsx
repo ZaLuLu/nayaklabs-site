@@ -1,258 +1,182 @@
-import React, { useRef, useState, useEffect } from 'react'
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useMotionValue,
-  useMotionTemplate,
-  AnimatePresence,
-} from 'framer-motion'
+import React, { useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { sound } from '../utils/audioEngine'
-import { useTheme } from '../utils/themeContext'
-import confetti from 'canvas-confetti'
+import { ArrowDown, ArrowRight, ShieldCheck, Clock, Cpu } from 'lucide-react'
 
-const SECTION_HEIGHT = 1400 // Scroll travel distance in px for pinned cinematic zoom
-const DOT_COLORS = ['#E2001A', '#00F5A0', '#00D2FF', '#FFB800', '#A855F7', '#3B82F6']
+gsap.registerPlugin(ScrollTrigger)
 
-export function Hero3D() {
+interface Hero3DProps {
+  visible?: boolean
+  onScrollToDivision?: (id: string) => void
+}
+
+/**
+ * Hero3D (Streamlined Static & Zoom-Through Hero)
+ * - Pure typographic precision without distracting animated background blobs.
+ * - Razor-sharp "Nayak Labs." title directly visible once split intro ends.
+ * - On scroll down, the wordmark smoothly expands in 3D camera space (zoom-through effect)
+ *   guiding the user through the brand text directly into the P - S - A divisions.
+ */
+export function Hero3D({ visible = true, onScrollToDivision }: Hero3DProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { themeMode } = useTheme()
-  const isLight = themeMode === 'light'
-  const [dotColor, setDotColor] = useState(DOT_COLORS[0])
-  const [isHovered, setIsHovered] = useState(false)
-  const [rippleActive, setRippleActive] = useState(false)
-
-  // Slowly & randomly transition the full stop (.) color
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomColor = DOT_COLORS[Math.floor(Math.random() * DOT_COLORS.length)]
-      setDotColor(randomColor)
-    }, 4200)
-    return () => clearInterval(interval)
-  }, [])
-
-  // Mouse tilt & torchlight specular tracking physics
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-  const cursorClientX = useMotionValue(typeof window !== 'undefined' ? window.innerWidth / 2 : 500)
-  const cursorClientY = useMotionValue(typeof window !== 'undefined' ? window.innerHeight / 2 : 500)
-
-  const springConfig = { stiffness: 120, damping: 22, mass: 0.6 }
-  const smoothX = useSpring(mouseX, springConfig)
-  const smoothY = useSpring(mouseY, springConfig)
-
-  const rotateX = useTransform(smoothY, [-0.5, 0.5], [18, -18])
-  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-24, 24])
+  const wordmarkRef = useRef<HTMLHeadingElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (window.matchMedia('(pointer: coarse)').matches) return
+    if (!visible) return
+    const container = containerRef.current
+    const wordmark = wordmarkRef.current
+    const content = contentRef.current
+    if (!container || !wordmark || !content) return
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const { innerWidth, innerHeight } = window
-      mouseX.set(e.clientX / innerWidth - 0.5)
-      mouseY.set(e.clientY / innerHeight - 0.5)
-      cursorClientX.set(e.clientX)
-      cursorClientY.set(e.clientY)
-    }
+    const mm = gsap.matchMedia()
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mouseX, mouseY, cursorClientX, cursorClientY])
-
-  // Pinned scroll-driven zoom & dissolve mechanics
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  })
-
-  // Smooth transformations as user scrolls past the hero
-  const scale = useTransform(scrollYProgress, [0, 0.65, 1], [1, 1.85, 4.2])
-  const opacity = useTransform(scrollYProgress, [0, 0.55, 0.95], [1, 0.9, 0])
-  const blurValue = useTransform(scrollYProgress, [0.35, 0.95], [0, 16])
-  const filter = useMotionTemplate`blur(${blurValue}px)`
-  const letterSpacing = useTransform(scrollYProgress, [0, 0.7], ['-0.05em', '0.12em'])
-
-  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0])
-  const indicatorY = useTransform(scrollYProgress, [0, 0.15], [0, 20])
-
-  const auroraScale = useTransform(scrollYProgress, [0, 1], [1, 1.6])
-  const auroraOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.8],
-    isLight ? [0.2, 0.05] : [0.35, 0.1]
-  )
-
-  // Interactive Dot Burst Easter Egg
-  const handleDotClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    sound.playSuccess(0.08)
-    setRippleActive(true)
-    setTimeout(() => setRippleActive(false), 1200)
-
-    confetti({
-      particleCount: 45,
-      spread: 60,
-      origin: {
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
+    mm.add(
+      {
+        isReducedMotion: '(prefers-reduced-motion: reduce)',
+        isStandard: '(prefers-reduced-motion: no-preference)',
       },
-      colors: DOT_COLORS,
-    })
-  }
+      (context) => {
+        const { isReducedMotion } = context.conditions as { isReducedMotion: boolean }
+
+        if (isReducedMotion) {
+          gsap.set([wordmark, content], { opacity: 1, scale: 1 })
+          return
+        }
+
+        // ScrollTrigger Zoom-through transition:
+        // As user scrolls, wordmark scales up and fades out cleanly into the PSA sections
+        const zoomTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.8,
+            pin: true,
+            pinSpacing: true,
+          },
+        })
+
+        zoomTl
+          .to(wordmark, {
+            scale: 2.8,
+            opacity: 0,
+            y: -40,
+            filter: 'blur(10px)',
+            ease: 'power2.inOut',
+          }, 0)
+          .to(
+            '.hero-fade-element',
+            {
+              opacity: 0,
+              y: -30,
+              stagger: 0.04,
+              ease: 'power1.in',
+            },
+            0
+          )
+      },
+      container
+    )
+
+    return () => mm.revert()
+  }, [visible])
 
   return (
-    <div
+    <section
       ref={containerRef}
-      style={{ height: `calc(${SECTION_HEIGHT}px + 100vh)` }}
-      className="relative w-full bg-[var(--bg-base)] text-[var(--text-primary)] select-none transition-colors duration-300"
+      id="hero"
+      className="relative min-h-[100svh] flex flex-col items-center justify-center pt-20 pb-16 px-6 md:px-10 text-[var(--text-primary)] overflow-hidden"
     >
-      {/* Pinned Viewport Container */}
-      <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden perspective-[1200px]">
-        {/* Atmospheric Volumetric Aurora Mesh */}
-        <motion.div
-          style={{ scale: auroraScale, opacity: auroraOpacity }}
-          className="absolute inset-0 pointer-events-none overflow-hidden z-0"
-          aria-hidden="true"
-        >
-          {/* Crimson Core Light */}
-          <div
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[55vw] h-[55vw] max-w-[800px] max-h-[800px] rounded-full blur-[140px] animate-pulse ${
-              isLight
-                ? 'bg-gradient-to-tr from-[#E2001A]/10 via-[#E2001A]/5 to-transparent'
-                : 'bg-gradient-to-tr from-[#E2001A]/25 via-[#E2001A]/10 to-transparent'
-            }`}
-          />
-          {/* Cobalt Depth Pool */}
-          <div
-            className={`absolute top-1/3 left-1/4 w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] rounded-full blur-[120px] ${
-              isLight ? 'bg-[#00D2FF]/10' : 'bg-[#00D2FF]/20'
-            }`}
-          />
-          {/* Emerald Rim Pool */}
-          <div
-            className={`absolute bottom-1/4 right-1/4 w-[35vw] h-[35vw] max-w-[500px] max-h-[500px] rounded-full blur-[130px] ${
-              isLight ? 'bg-[#00F5A0]/8' : 'bg-[#00F5A0]/15'
-            }`}
-          />
+      {/* Subtle Architectural Reference Grid */}
+      <div className="hero-grid-lines opacity-70" aria-hidden="true" />
 
-          {/* Dot Click Chromatic Wave Ripple */}
-          <AnimatePresence>
-            {rippleActive && (
-              <motion.div
-                initial={{ scale: 0.2, opacity: 0.8 }}
-                animate={{ scale: 3, opacity: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.2, ease: 'easeOut' }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full blur-2xl border-2 border-white/60 pointer-events-none"
-                style={{
-                  background: `radial-gradient(circle, ${dotColor}40 0%, transparent 70%)`,
-                }}
-              />
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* 3D Chiseled Wordmark Layer */}
-        <motion.div
-          style={{
-            scale,
-            opacity,
-            filter,
-            rotateX,
-            rotateY,
-            transformStyle: 'preserve-3d',
-          }}
-          onMouseEnter={() => {
-            sound.playClick(900, 0.02)
-            setIsHovered(true)
-          }}
-          onMouseLeave={() => setIsHovered(false)}
-          className="relative z-10 flex items-center justify-center cursor-default px-4 will-change-transform"
-        >
-          {/* Deep Shadow Extrusion Plane (-16px Z) */}
-          <motion.div
-            style={{
-              letterSpacing,
-              transform: 'translateZ(-16px)',
-            }}
-            className={`absolute font-display font-black text-[clamp(4.2rem,13.5vw,13rem)] tracking-tighter blur-[6px] pointer-events-none select-none ${
-              isLight ? 'text-black/10' : 'text-black/70'
-            }`}
-            aria-hidden="true"
-          >
-            Nayak Labs.
-          </motion.div>
-
-          {/* Mid Chisel Extrusion Plane (-8px Z) */}
-          <motion.div
-            style={{
-              letterSpacing,
-              transform: 'translateZ(-8px)',
-            }}
-            className={`absolute font-display font-black text-[clamp(4.2rem,13.5vw,13rem)] tracking-tighter pointer-events-none select-none ${
-              isLight ? 'text-black/15' : 'text-[#16171E]'
-            }`}
-            aria-hidden="true"
-          >
-            Nayak Labs.
-          </motion.div>
-
-          {/* Core Illuminated Foreground 3D Text Face (+12px Z) */}
-          <motion.h1
-            style={{
-              letterSpacing,
-              transform: 'translateZ(12px)',
-            }}
-            className={`font-display font-black text-[clamp(4.2rem,13.5vw,13rem)] tracking-tighter leading-none text-transparent bg-clip-text relative group ${
-              isLight
-                ? 'bg-gradient-to-b from-[#09090b] via-[#23242c] to-[#5a5c68] drop-shadow-[0_10px_25px_rgba(0,0,0,0.15)]'
-                : 'bg-gradient-to-b from-white via-[#E8E8EE] to-[#8E909E] drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]'
-            }`}
-          >
-            Nayak Labs
-            {/* Interactive Kinetic Color-Morphing Full Stop (Clickable Easter Egg) */}
-            <span
-              onClick={handleDotClick}
-              title="Click for sound burst!"
-              className="inline-block transition-colors duration-1000 ease-in-out cursor-pointer hover:scale-125 transition-transform"
-              style={{
-                color: dotColor,
-                textShadow: isLight
-                  ? `0 0 25px ${dotColor}60, 0 0 50px ${dotColor}30`
-                  : `0 0 35px ${dotColor}80, 0 0 70px ${dotColor}40`,
-              }}
-            >
-              .
-            </span>
-          </motion.h1>
-        </motion.div>
-
-        {/* Minimalist Bottom Scroll Affordance (Thin Line + Breathing Indicator) */}
-        <motion.div
-          style={{ opacity: indicatorOpacity, y: indicatorY }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-20"
-          aria-hidden="true"
-        >
-          <div
-            className={`w-[1px] h-8 animate-pulse ${
-              isLight
-                ? 'bg-gradient-to-b from-transparent via-black/30 to-black/80'
-                : 'bg-gradient-to-b from-transparent via-white/40 to-white/90'
-            }`}
-          />
-          <span
-            className={`font-mono text-[9px] tracking-[0.3em] uppercase ${
-              isLight ? 'text-black/50' : 'text-white/40'
-            }`}
-          >
-            SCROLL
+      {/* Hero Content Container */}
+      <div
+        ref={contentRef}
+        className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center text-center py-6"
+      >
+        {/* Eyebrow badge */}
+        <div className="hero-fade-element inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-[var(--border-base)] bg-[var(--bg-card)]/80 backdrop-blur-md font-mono text-xs text-[var(--text-secondary)] mb-8 shadow-xs">
+          <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-pulse" />
+          <span className="tracking-wider uppercase font-semibold text-[11px]">
+            AI PRODUCT STUDIO & RESEARCH PODS
           </span>
-        </motion.div>
+        </div>
 
-        {/* Seamless Bottom Vignette Blend into Lower Sections */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-[var(--bg-base)] pointer-events-none z-10" />
+        {/* Zoom-Through Central Wordmark */}
+        <h1
+          ref={wordmarkRef}
+          className="font-display font-bold text-hero text-[var(--text-primary)] mb-6 select-none tracking-tight will-change-transform"
+        >
+          Nayak Labs
+          <span
+            className="text-[var(--accent-primary)] ml-0.5 inline-block cursor-pointer hover:scale-110 transition-transform"
+            onClick={() => sound.playSuccess(0.08)}
+            title="Nayak Labs"
+          >
+            .
+          </span>
+        </h1>
+
+        {/* Subtitle */}
+        <p className="hero-fade-element font-body text-base sm:text-lg text-[var(--text-secondary)] font-normal max-w-2xl mx-auto leading-relaxed mb-10">
+          We engineer software that ships.
+          <span className="text-[var(--text-muted)] ml-2">
+            18-day fixed MVP sprints · autonomous AI pipelines · 100% intellectual property transfer.
+          </span>
+        </p>
+
+        {/* Division Shortcut Anchors */}
+        <div className="hero-fade-element flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-14">
+          <a
+            href="#products"
+            onClick={(e) => {
+              e.preventDefault()
+              sound.playClick(800)
+              onScrollToDivision?.('products')
+            }}
+            className="px-4 py-2 rounded-xl border border-[var(--border-base)] bg-[var(--bg-card)]/60 hover:border-[var(--accent-primary)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+          >
+            <span className="text-[var(--accent-primary)] font-bold">01</span>
+            <span>Products (P)</span>
+          </a>
+
+          <a
+            href="#services"
+            onClick={(e) => {
+              e.preventDefault()
+              sound.playClick(850)
+              onScrollToDivision?.('services')
+            }}
+            className="px-4 py-2 rounded-xl border border-[var(--border-base)] bg-[var(--bg-card)]/60 hover:border-[var(--accent-emerald)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+          >
+            <span className="text-[var(--accent-emerald)] font-bold">02</span>
+            <span>Services (S)</span>
+          </a>
+
+          <a
+            href="#academics"
+            onClick={(e) => {
+              e.preventDefault()
+              sound.playClick(900)
+              onScrollToDivision?.('academics')
+            }}
+            className="px-4 py-2 rounded-xl border border-[var(--border-base)] bg-[var(--bg-card)]/60 hover:border-[var(--accent-cyan)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+          >
+            <span className="text-[var(--accent-cyan)] font-bold">03</span>
+            <span>Academics (A)</span>
+          </a>
+        </div>
+
+        {/* Scroll down prompt */}
+        <div className="hero-fade-element flex flex-col items-center gap-2 font-mono text-[11px] text-[var(--text-muted)] tracking-wider">
+          <span className="uppercase">SCROLL TO ENTER DIVISIONS</span>
+          <ArrowDown className="w-3.5 h-3.5 animate-bounce text-[var(--text-secondary)]" />
+        </div>
       </div>
-    </div>
+    </section>
   )
 }

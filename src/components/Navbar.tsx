@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react'
-import { motion, useScroll, AnimatePresence } from 'framer-motion'
+import React, { useEffect, useState, useRef } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { sound } from '../utils/audioEngine'
 import { useTheme } from '../utils/themeContext'
 import { Volume2, VolumeX, Sun, Moon, ArrowRight, Menu, X } from 'lucide-react'
 
 interface NavbarProps {
-  onScrollTo: (id: string) => void
+  onScrollTo?: (id: string) => void
 }
 
 const navLinks = [
-  { label: 'Manifesto', num: '01', id: 'about' },
-  { label: 'Estimator', num: '02', id: 'estimator' },
-  { label: 'Products', num: '03', id: 'products' },
-  { label: 'Studio Hub', num: '04', id: 'hub' },
+  { label: 'Products', num: '01', id: 'products' },
+  { label: 'Services', num: '02', id: 'services' },
+  { label: 'Academics', num: '03', id: 'academics' },
+  { label: 'Why Us', num: '04', id: 'why-us' },
   { label: 'Contact', num: '05', id: 'contact' },
 ]
 
@@ -20,17 +20,20 @@ export function Navbar({ onScrollTo }: NavbarProps) {
   const { themeMode, toggleThemeMode, audioEnabled, toggleAudio } = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [activeSection, setActiveSection] = useState('home')
-  const { scrollY } = useScroll()
+  const [activeSection, setActiveSection] = useState('products')
+  const location = useLocation()
+  const navigate = useNavigate()
+  const isHome = location.pathname === '/'
 
-  useEffect(() => {
-    const unsub = scrollY.on('change', (v) => setScrolled(v > 20))
-    return unsub
-  }, [scrollY])
+  const navContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'estimator', 'products', 'hub', 'contact']
+      setScrolled(window.scrollY > 20)
+
+      if (!isHome) return
+
+      const sections = ['hero', 'products', 'services', 'academics', 'why-us', 'social', 'contact']
       const scrollPos = window.scrollY + 220
 
       for (const sectionId of sections) {
@@ -45,146 +48,139 @@ export function Navbar({ onScrollTo }: NavbarProps) {
         }
       }
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
-  const handleNav = (id: string) => {
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isHome])
+
+  const handleNavClick = (id?: string) => {
     sound.playClick(800)
     setMobileOpen(false)
-    onScrollTo(id)
+    if (id) {
+      if (isHome) {
+        onScrollTo?.(id)
+      } else {
+        navigate('/', { state: { scrollTo: id } })
+      }
+    }
   }
 
   return (
     <>
-      <motion.header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        style={{
-          background: scrolled ? 'var(--glass-bg)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-          borderBottom: scrolled ? '1px solid var(--border-base)' : '1px solid transparent',
-        }}
-      >
+      <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none transition-all duration-300">
         <nav
-          className="max-w-[1400px] mx-auto px-6 md:px-10 h-16 flex items-center justify-between"
+          className={`pointer-events-auto max-w-[1040px] w-full px-4 sm:px-6 h-14 rounded-2xl border transition-all duration-300 flex items-center justify-between shadow-lg ${
+            scrolled
+              ? 'bg-[var(--glass-bg)] border-[var(--border-hover)] backdrop-blur-2xl'
+              : 'bg-[var(--glass-bg)]/85 border-[var(--border-base)] backdrop-blur-xl'
+          }`}
+          style={{
+            boxShadow: 'var(--card-shadow)',
+          }}
           aria-label="Primary navigation"
         >
-          {/* Left: Brand Wordmark */}
+          {/* Brand Wordmark */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => handleNav('home')}
-              className="flex items-center gap-2 group cursor-pointer bg-transparent border-none text-left"
-              aria-label="Nayak Labs — go to top"
+            <Link
+              to="/"
+              onClick={() => {
+                sound.playClick(800)
+                if (isHome && onScrollTo) onScrollTo('hero')
+              }}
+              className="flex items-center gap-1.5 group cursor-pointer bg-transparent border-none text-left"
+              aria-label="Nayak Labs — home"
             >
-              <span
-                className="font-display font-black text-[var(--text-primary)] text-xl tracking-tight transition-opacity duration-200 group-hover:opacity-80"
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                Nayak Labs.
+              <span className="font-display font-bold text-[var(--text-primary)] text-lg tracking-tight transition-opacity duration-200 group-hover:opacity-80">
+                Nayak Labs
               </span>
-            </button>
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-primary)] inline-block" />
+            </Link>
           </div>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-2 font-mono text-xs text-[var(--text-secondary)]">
+          {/* Desktop Nav Capsule with Smooth Active Pill */}
+          <div
+            ref={navContainerRef}
+            className="relative hidden md:flex items-center gap-1 p-1 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)]/60 backdrop-blur-md"
+          >
             {navLinks.map((link) => {
-              const isActive = activeSection === link.id
+              const active = isHome && activeSection === link.id
+
               return (
                 <button
-                  key={link.id}
-                  onClick={() => handleNav(link.id)}
-                  className={`px-3 py-1.5 rounded-lg transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? 'text-[var(--text-primary)] bg-[var(--bg-surface)] font-bold'
-                      : 'hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]/60'
+                  key={link.label}
+                  onClick={() => handleNavClick(link.id)}
+                  className={`relative z-10 px-3 py-1.5 rounded-lg transition-all duration-200 cursor-pointer font-body text-xs font-semibold ${
+                    active
+                      ? 'text-[var(--text-primary)] bg-[var(--bg-card)] border border-[var(--border-base)] shadow-xs'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
-                  <span className="text-[10px] text-[var(--text-muted)] mr-1.5">{link.num}</span>
-                  <span>{link.label}</span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-[10px] text-[var(--text-muted)] font-mono">{link.num}</span>
+                    <span>{link.label}</span>
+                  </span>
                 </button>
               )
             })}
           </div>
 
-          {/* Right: Controls & CTA */}
-          <div className="flex items-center gap-2.5">
-            {/* Audio Toggle */}
+          {/* Action CTAs */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <button
-              onClick={toggleAudio}
-              className={`p-2 rounded-lg border transition-all cursor-pointer ${
-                audioEnabled
-                  ? 'border-[var(--accent-primary)] bg-[var(--accent-glow)]/15 text-[var(--accent-primary)]'
-                  : 'border-[var(--border-base)] bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-              }`}
-              title={audioEnabled ? 'Audio Micro-Haptics Enabled' : 'Audio Muted'}
-              aria-label="Toggle Audio Micro-Haptics"
+              onClick={() => toggleAudio()}
+              className="p-2 rounded-xl border border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors cursor-pointer bg-[var(--bg-surface)]/40"
+              title={audioEnabled ? 'Mute Interface Sound' : 'Enable Interface Sound'}
+              aria-label={audioEnabled ? 'Mute sound' : 'Enable sound'}
             >
-              {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              {audioEnabled ? <Volume2 className="w-3.5 h-3.5 text-[var(--accent-emerald)]" /> : <VolumeX className="w-3.5 h-3.5" />}
             </button>
 
-            {/* Theme Toggle */}
             <button
-              onClick={toggleThemeMode}
-              className="p-2 rounded-lg border border-[var(--border-base)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-all cursor-pointer"
-              title="Toggle Light / Dark Theme"
-              aria-label="Toggle Theme"
+              onClick={() => toggleThemeMode()}
+              className="p-2 rounded-xl border border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition-colors cursor-pointer bg-[var(--bg-surface)]/40"
+              title={`Switch to ${themeMode === 'dark' ? 'light' : 'dark'} mode`}
+              aria-label="Toggle theme mode"
             >
-              {themeMode === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {themeMode === 'dark' ? <Sun className="w-3.5 h-3.5 text-[var(--accent-amber)]" /> : <Moon className="w-3.5 h-3.5 text-[var(--accent-cyan)]" />}
             </button>
 
-            {/* Start Project CTA */}
             <button
-              onClick={() => handleNav('contact')}
-              className="btn-primary hidden sm:inline-flex py-2 px-3.5 text-xs"
+              onClick={() => handleNavClick('contact')}
+              className="hidden sm:inline-flex items-center gap-1.5 btn-primary py-1.5 px-3.5 text-xs font-body font-semibold rounded-xl"
             >
-              <span>START A PROJECT</span>
+              <span>CONNECT</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
-            {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 rounded-lg border border-[var(--border-base)] bg-[var(--bg-surface)] text-[var(--text-primary)]"
-              aria-label="Toggle mobile menu"
+              className="md:hidden p-2 rounded-xl border border-[var(--border-base)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-surface)]/40"
+              aria-label="Toggle menu"
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </nav>
-      </motion.header>
+      </header>
 
       {/* Mobile Drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-x-0 top-16 z-40 bg-[var(--bg-card)] border-b border-[var(--border-base)] p-6 shadow-2xl lg:hidden backdrop-blur-xl"
-          >
-            <div className="flex flex-col gap-3 font-mono text-sm">
-              {navLinks.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => handleNav(link.id)}
-                  className="flex items-center justify-between p-3 rounded-lg border border-[var(--border-base)] bg-[var(--bg-surface)] text-[var(--text-primary)]"
-                >
-                  <span>{link.label}</span>
-                  <span className="text-xs text-[var(--accent-primary)] font-bold">{link.num}</span>
-                </button>
-              ))}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 bg-[var(--bg-base)]/95 backdrop-blur-2xl flex flex-col justify-center px-8 md:hidden">
+          <div className="flex flex-col gap-6 max-w-sm mx-auto w-full">
+            {navLinks.map((link) => (
               <button
-                onClick={() => handleNav('contact')}
-                className="btn-primary w-full justify-center mt-2 py-3"
+                key={link.label}
+                onClick={() => handleNavClick(link.id)}
+                className="flex items-center justify-between text-2xl font-display font-bold text-[var(--text-primary)] text-left py-2 border-b border-[var(--border-base)]"
               >
-                <span>START A PROJECT</span>
-                <ArrowRight className="w-4 h-4 ml-1 inline" />
+                <span>{link.label}</span>
+                <span className="font-mono text-xs text-[var(--text-muted)]">{link.num}</span>
               </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   )
 }

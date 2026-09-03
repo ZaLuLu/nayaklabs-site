@@ -7,25 +7,20 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'display': ['Clash Display', 'sans-serif'],
-        'syne': ['Syne', 'sans-serif'],
-        'serif': ['"Instrument Serif"', 'Georgia', 'serif'],
-        'body': ['General Sans', 'sans-serif'],
+        'display': ['"Outfit"', 'sans-serif'],
+        'body': ['"Plus Jakarta Sans"', '-apple-system', 'sans-serif'],
         'mono': ['"JetBrains Mono"', 'monospace'],
       },
       colors: {
-        'c1': '#000000',      // black — primary dark
-        'c2': '#FFFFFF',      // white — primary light
-        'c3': '#888888',      // mid-grey — secondary/muted
-        'c4': '#E5E5E5',      // light-grey — backgrounds/dividers
         'accent-red': '#E2001A',
         'accent-emerald': '#00F5A0',
         'accent-amber': '#FFB800',
         'accent-cyan': '#00D2FF',
       },
       fontSize: {
-        'hero': ['clamp(2.4rem, 4.8vw, 4.25rem)', { lineHeight: '1.08', letterSpacing: '-0.03em' }],
-        'section': ['clamp(1.85rem, 3.4vw, 2.75rem)', { lineHeight: '1.15', letterSpacing: '-0.025em' }],
+        'hero': ['clamp(3.4rem, 8.5vw, 6.8rem)', { lineHeight: '0.98', letterSpacing: '-0.035em' }],
+        'section-h': ['clamp(2.0rem, 4.2vw, 3.2rem)', { lineHeight: '1.1', letterSpacing: '-0.03em' }],
+        'card-h': ['clamp(1.25rem, 2.0vw, 1.6rem)', { lineHeight: '1.2', letterSpacing: '-0.02em' }],
       },
       transitionTimingFunction: {
         'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',

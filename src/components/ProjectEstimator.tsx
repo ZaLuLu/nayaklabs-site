@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ScrollReveal } from './ScrollReveal'
 import { SectionEyebrow } from './SectionEyebrow'
 import { sound } from '../utils/audioEngine'
@@ -9,16 +9,10 @@ import {
   Cpu,
   Globe,
   Workflow,
-  Sparkles,
   CheckCircle2,
-  Clock,
-  ShieldCheck,
   ArrowRight,
   MessageCircle,
-  Zap,
-  Terminal,
   Play,
-  Layers,
 } from 'lucide-react'
 
 type ProjectType = 'ai' | 'saas' | 'automation'
@@ -27,7 +21,7 @@ type ProjectSpeed = 'fast' | 'production'
 
 const PRESET_IDEAS = [
   {
-    label: '🤖 AI WhatsApp Support Agent (RAG)',
+    label: '🤖 AI WhatsApp Support Agent',
     prompt: 'Autonomous WhatsApp customer support agent that searches internal PDF manuals and books appointments.',
   },
   {
@@ -35,19 +29,18 @@ const PRESET_IDEAS = [
     prompt: 'B2B subscription software with team workspaces, role-based auth, and Stripe metered billing.',
   },
   {
-    label: '⚡ Real-Time Price Scraper & Alerts',
+    label: '⚡ Price Monitor & Alert Engine',
     prompt: 'Distributed web scraper that tracks competitor prices every 15 minutes and sends instant Slack alerts.',
   },
 ]
 
-// Smart Keyword-Matching Parser for 100% Real Technical Accuracy
 function parsePromptArchitecture(promptText: string) {
   const p = promptText.toLowerCase()
 
   if (p.includes('whatsapp') || p.includes('voice') || p.includes('call') || p.includes('bot') || p.includes('chat')) {
     return {
       title: 'Autonomous AI Agent & Messaging Pipeline',
-      stack: ['WhatsApp Cloud API', 'Python FastAPI', 'LangGraph', 'Whisper / ElevenLabs', 'Qdrant Vector DB', 'Postgres'],
+      stack: ['WhatsApp Cloud API', 'Python FastAPI', 'LangGraph', 'Qdrant Vector DB', 'Postgres'],
       timeline: '18 Days',
       team: '2 Senior Engineers + AI Architect',
       nodes: ['WhatsApp API', 'FastAPI Gateway', 'LangGraph Engine', 'Claude 3.5 Sonnet', 'PostgreSQL'],
@@ -88,7 +81,6 @@ function parsePromptArchitecture(promptText: string) {
     }
   }
 
-  // Default Full-Stack SaaS Architecture
   return {
     title: 'High-Velocity SaaS Web Application',
     stack: ['Next.js 15 (App Router)', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Stripe Billing', 'FastAPI'],
@@ -101,13 +93,12 @@ function parsePromptArchitecture(promptText: string) {
 
 export function ProjectEstimator() {
   const { setActiveBrief } = useTheme()
+  const navigate = useNavigate()
   const [mode, setMode] = useState<'prompt' | 'selector'>('prompt')
 
-  // Prompt Mode State
   const [inputPrompt, setInputPrompt] = useState(PRESET_IDEAS[0].prompt)
   const [isCompiling, setIsCompiling] = useState(false)
 
-  // Selector Mode State
   const [projectType, setProjectType] = useState<ProjectType>('ai')
   const [projectStage, setProjectStage] = useState<ProjectStage>('idea')
   const [projectSpeed, setProjectSpeed] = useState<ProjectSpeed>('fast')
@@ -116,7 +107,7 @@ export function ProjectEstimator() {
     ai: {
       label: 'Autonomous AI / LLM Agent',
       icon: Cpu,
-      desc: 'RAG pipelines, custom agent loops, vector search, or voice/vision bots.',
+      desc: 'RAG pipelines, custom agent loops, vector search, or voice bots.',
       baseWeeks: 3,
     },
     saas: {
@@ -134,7 +125,7 @@ export function ProjectEstimator() {
   }
 
   const stageConfig = {
-    idea: { label: 'Idea / Notes', addWeeks: 1, desc: 'We shape the wireframes & technical architecture.' },
+    idea: { label: 'Idea / Concept', addWeeks: 1, desc: 'We shape the wireframes & technical architecture.' },
     figma: { label: 'Figma Ready', addWeeks: 0, desc: 'Ready for immediate front-end & back-end sprint.' },
     codebase: { label: 'Existing Codebase', addWeeks: 1, desc: 'Refactoring, new AI features, or scaling existing infra.' },
   }
@@ -144,7 +135,6 @@ export function ProjectEstimator() {
     production: { label: 'Production Pod', team: '4-Engineer Dedicated Pod', target: 'Complete enterprise app in 4–6 weeks' },
   }
 
-  // Dynamic Blueprint Resolution
   const activeBlueprint = useMemo(() => {
     if (mode === 'prompt') {
       return parsePromptArchitecture(inputPrompt)
@@ -170,7 +160,7 @@ export function ProjectEstimator() {
     setTimeout(() => {
       setIsCompiling(false)
       sound.playSuccess(0.06)
-    }, 450)
+    }, 350)
   }
 
   const handleSendWhatsApp = () => {
@@ -183,7 +173,7 @@ export function ProjectEstimator() {
       `• Timeline: ${activeBlueprint.timeline} (${activeBlueprint.team})\n\n` +
       `Let's connect to discuss kickoff availability!`
     )
-    window.open(`https://wa.me/919876543210?text=${text}`, '_blank')
+    window.open(`https://wa.me/?text=${text}`, '_blank')
   }
 
   const handleApplyToForm = () => {
@@ -193,13 +183,15 @@ export function ProjectEstimator() {
     const contactSection = document.getElementById('contact')
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    } else {
+      navigate('/', { state: { scrollTo: 'contact' } })
     }
   }
 
   return (
     <section
       id="estimator"
-      className="py-20 md:py-28 px-6 md:px-10 max-w-[1400px] mx-auto border-t border-[var(--border-base)] transition-colors duration-300 relative"
+      className="py-24 md:py-32 px-6 md:px-10 max-w-[1240px] mx-auto border-t border-[var(--border-base)] transition-colors duration-300 relative"
       aria-labelledby="estimator-headline"
     >
       {/* Eyebrow */}
@@ -209,30 +201,30 @@ export function ProjectEstimator() {
         </ScrollReveal>
         <ScrollReveal delay={0.05}>
           <p className="font-mono text-xs text-[var(--text-muted)] tracking-wider">
-            ( TYPE ANY IDEA OR CHOOSE PRESETS • REAL ESTIMATES )
+            ( INSTANT SYSTEM BLUEPRINT & SPRINT SCOPE )
           </p>
         </ScrollReveal>
       </div>
 
-      {/* Headline with Mixed Fonts */}
+      {/* Headline */}
       <ScrollReveal delay={0.1}>
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <h2
               id="estimator-headline"
-              className="text-section-h font-display font-bold text-[var(--text-primary)] tracking-tight leading-[1.14] mb-3"
+              className="text-section-h font-display font-bold text-[var(--text-primary)] tracking-tight leading-[1.1] mb-2"
             >
-              Turn your vision into a{' '}
-              <span className="font-serif italic font-normal text-[var(--accent-primary)]">
-                production sprint
+              Turn your concept into an{' '}
+              <span className="font-accent italic font-normal text-[var(--accent-primary)]">
+                18-day sprint
               </span>.
             </h2>
-            <p className="text-base sm:text-lg text-[var(--text-secondary)] font-normal leading-relaxed max-w-2xl">
-              Type your idea or select project parameters below to see the exact tech stack, microservice dataflow, and sprint timeline.
+            <p className="font-body text-base text-[var(--text-secondary)] max-w-xl leading-relaxed">
+              Describe your idea to generate microservice dataflow topology, tech stack, and milestone timeline.
             </p>
           </div>
 
-          {/* Mode Switcher Tabs */}
+          {/* Mode Switcher */}
           <div className="p-1 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] font-mono text-xs flex items-center gap-1 shrink-0">
             <button
               onClick={() => {
@@ -245,7 +237,7 @@ export function ProjectEstimator() {
                   : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
-              ⚡ AI Prompt to Architecture
+              ⚡ AI Prompt Mode
             </button>
             <button
               onClick={() => {
@@ -264,16 +256,16 @@ export function ProjectEstimator() {
         </div>
       </ScrollReveal>
 
-      {/* Main Grid: Input Controls + Live Interactive Architecture Output */}
+      {/* Grid: Input + Topology */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-        {/* Left Input Pane */}
+        {/* Left: Input Pane */}
         <div className="lg:col-span-6 space-y-6">
           {mode === 'prompt' ? (
             <ScrollReveal delay={0.12}>
-              <div className="p-6 sm:p-7 rounded-3xl border border-[var(--border-base)] bg-[var(--bg-card)]/90 backdrop-blur-xl shadow-xl space-y-5">
+              <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] shadow-lg space-y-5">
                 <div>
                   <label className="block font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2.5 font-bold">
-                    Quick Preset Concepts:
+                    Preset Concepts:
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {PRESET_IDEAS.map((preset, idx) => (
@@ -307,14 +299,14 @@ export function ProjectEstimator() {
                   <button
                     onClick={handleRunCompile}
                     disabled={isCompiling || !inputPrompt.trim()}
-                    className="btn-primary w-full justify-center py-3 text-xs cursor-pointer"
+                    className="btn-primary w-full justify-center py-3 text-xs cursor-pointer font-body font-semibold"
                   >
                     {isCompiling ? (
-                      <span>COMPILING BLUEPRINT...</span>
+                      <span>COMPILING ARCHITECTURE...</span>
                     ) : (
                       <span className="flex items-center gap-2">
                         <Play className="w-3.5 h-3.5 fill-current" />
-                        COMPILE ARCHITECTURE BLUEPRINT
+                        COMPILE BLUEPRINT
                       </span>
                     )}
                   </button>
@@ -323,10 +315,10 @@ export function ProjectEstimator() {
             </ScrollReveal>
           ) : (
             <ScrollReveal delay={0.12}>
-              <div className="space-y-6">
-                {/* Step 1: Project Type */}
+              <div className="space-y-5">
+                {/* Step 1: Type */}
                 <div>
-                  <label className="block font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2.5 font-bold">
+                  <label className="block font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2 font-bold">
                     1. What are you building?
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -350,7 +342,7 @@ export function ProjectEstimator() {
                           <div className="font-display font-bold text-xs text-[var(--text-primary)] mb-1">
                             {cfg.label}
                           </div>
-                          <div className="text-[10px] text-[var(--text-secondary)]">
+                          <div className="text-[10px] text-[var(--text-muted)] font-mono">
                             ~{cfg.baseWeeks} Wks
                           </div>
                         </button>
@@ -359,9 +351,9 @@ export function ProjectEstimator() {
                   </div>
                 </div>
 
-                {/* Step 2: Project Stage */}
+                {/* Step 2: Stage */}
                 <div>
-                  <label className="block font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2.5 font-bold">
+                  <label className="block font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2 font-bold">
                     2. Current stage:
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -391,9 +383,9 @@ export function ProjectEstimator() {
                   </div>
                 </div>
 
-                {/* Step 3: Speed & Pod */}
+                {/* Step 3: Pod */}
                 <div>
-                  <label className="block font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2.5 font-bold">
+                  <label className="block font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2 font-bold">
                     3. Team Pod:
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -430,55 +422,52 @@ export function ProjectEstimator() {
           )}
         </div>
 
-        {/* Right Output: Architecture Blueprint & Animated Beam Topology */}
+        {/* Right: Architecture Blueprint & Topology */}
         <div className="lg:col-span-6">
           <ScrollReveal delay={0.18}>
-            <div className="p-6 sm:p-8 rounded-3xl border border-[var(--border-base)] bg-[var(--bg-card)]/90 backdrop-blur-xl shadow-2xl space-y-6 relative overflow-hidden">
-              <div className="flex items-center justify-between pb-4 border-b border-[var(--border-base)]">
+            <div className="p-6 sm:p-7 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-card)] shadow-xl space-y-5 relative overflow-hidden">
+              <div className="flex items-center justify-between pb-3 border-b border-[var(--border-base)]">
                 <div>
-                  <span className="font-mono text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
-                    PRODUCTION BLUEPRINT
+                  <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-wider">
+                    PRODUCTION ARCHITECTURE
                   </span>
-                  <h3 className="font-display font-bold text-lg text-[var(--text-primary)]">
+                  <h3 className="font-display font-bold text-base sm:text-lg text-[var(--text-primary)]">
                     {activeBlueprint.title}
                   </h3>
                 </div>
-                <span className="font-mono text-[11px] px-2.5 py-0.5 rounded-md bg-emerald-500/10 text-[var(--accent-emerald)] font-bold">
-                  ● ACTIVE CAPACITY
+                <span className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-[var(--accent-emerald)] font-bold">
+                  ● ACTIVE POD CAPACITY
                 </span>
               </div>
 
-              {/* Animated Beam Dataflow Topology */}
+              {/* Dataflow Topology */}
               <div>
-                <div className="font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-3 font-bold">
-                  Microservice Dataflow Topology:
+                <div className="font-mono text-xs text-[var(--text-muted)] uppercase tracking-wider mb-2 font-bold">
+                  Dataflow Topology:
                 </div>
-                <div className="flex flex-wrap items-center gap-1 p-3.5 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-surface)]/60">
+                <div className="flex flex-wrap items-center gap-1 p-3 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)]/60">
                   {activeBlueprint.nodes.map((node, i) => (
                     <div key={i} className="flex items-center">
-                      <span className="px-2.5 py-1.5 rounded-lg border border-[var(--border-base)] bg-[var(--bg-card)] font-mono text-[11px] font-bold text-[var(--text-primary)] shadow-xs">
+                      <span className="px-2 py-1 rounded-md border border-[var(--border-base)] bg-[var(--bg-card)] font-mono text-[10px] font-bold text-[var(--text-primary)] shadow-xs">
                         {node}
                       </span>
-                      {i < activeBlueprint.nodes.length - 1 && (
-                        <AnimatedBeam />
-                      )}
+                      {i < activeBlueprint.nodes.length - 1 && <AnimatedBeam />}
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Stack & Sprint Metrics Split */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {/* Tech Stack */}
-                <div className="p-4 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-surface)]">
-                  <div className="font-mono text-[11px] text-[var(--text-muted)] uppercase mb-2 font-bold">
+              {/* Stack & Sprint Metrics */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="p-3.5 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)]">
+                  <div className="font-mono text-[10px] text-[var(--text-muted)] uppercase mb-1.5 font-bold">
                     Production Stack:
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1">
                     {activeBlueprint.stack.map((s, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-0.5 rounded-md bg-[var(--bg-card)] border border-[var(--border-base)] font-mono text-[10px] text-[var(--text-primary)]"
+                        className="px-1.5 py-0.5 rounded bg-[var(--bg-card)] border border-[var(--border-base)] font-mono text-[10px] text-[var(--text-primary)]"
                       >
                         {s}
                       </span>
@@ -486,24 +475,23 @@ export function ProjectEstimator() {
                   </div>
                 </div>
 
-                {/* Duration & Team */}
-                <div className="p-4 rounded-2xl border border-[var(--border-base)] bg-[var(--bg-surface)] flex flex-col justify-between">
+                <div className="p-3.5 rounded-xl border border-[var(--border-base)] bg-[var(--bg-surface)] flex flex-col justify-between">
                   <div>
-                    <div className="font-mono text-[11px] text-[var(--text-muted)] uppercase mb-1 font-bold">
+                    <div className="font-mono text-[10px] text-[var(--text-muted)] uppercase mb-0.5 font-bold">
                       Sprint Timeline:
                     </div>
-                    <div className="font-display font-extrabold text-2xl text-[var(--accent-primary)]">
+                    <div className="font-display font-bold text-xl text-[var(--accent-primary)]">
                       {activeBlueprint.timeline}
                     </div>
                   </div>
-                  <div className="font-mono text-[10px] text-[var(--text-secondary)] mt-2">
+                  <div className="font-mono text-[10px] text-[var(--text-secondary)] mt-1">
                     Team: <strong>{activeBlueprint.team}</strong>
                   </div>
                 </div>
               </div>
 
               {/* Guarantees */}
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono text-[var(--text-secondary)] pt-2">
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono text-[var(--text-secondary)]">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[var(--accent-emerald)] shrink-0" />
                   <span>100% IP & Git Transfer</span>
@@ -514,11 +502,11 @@ export function ProjectEstimator() {
                 </div>
               </div>
 
-              {/* Actions: WhatsApp Fast-Track + Inquiry Form Sync */}
-              <div className="space-y-2.5 pt-4 border-t border-[var(--border-base)]">
+              {/* Actions */}
+              <div className="space-y-2 pt-3 border-t border-[var(--border-base)]">
                 <button
                   onClick={handleSendWhatsApp}
-                  className="w-full py-3 px-4 rounded-xl bg-[#25D366] text-black font-mono font-bold text-xs hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] text-black font-body font-bold text-xs hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4 fill-current" />
                   <span>SEND BLUEPRINT ON WHATSAPP TO SURAJ NAYAK</span>
@@ -526,10 +514,10 @@ export function ProjectEstimator() {
 
                 <button
                   onClick={handleApplyToForm}
-                  className="btn-primary w-full justify-center py-3 text-xs cursor-pointer"
+                  className="btn-primary w-full justify-center py-2.5 text-xs cursor-pointer font-body"
                 >
                   <span>LOCK IN BLUEPRINT & INQUIRE</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>

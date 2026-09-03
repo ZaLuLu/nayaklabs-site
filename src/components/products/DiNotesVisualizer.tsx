@@ -323,8 +323,8 @@ export function DiNotesVisualizer() {
 
             let barColor = 'rgba(128, 128, 128, 0.35)'
             if (isSwapping) barColor = 'var(--accent-primary, #E2001A)'
-            else if (isComparing) barColor = '#3B82F6'
-            else if (isSorted) barColor = 'rgba(16, 185, 129, 0.85)'
+            else if (isComparing) barColor = 'var(--accent-cyan, #00D2FF)'
+            else if (isSorted) barColor = 'var(--accent-emerald, #00F5A0)'
 
             return (
               <div
@@ -358,7 +358,7 @@ export function DiNotesVisualizer() {
                 key={idx}
                 className={`px-2 py-0.5 rounded-md transition-colors duration-100 ${
                   activeCodeLine === idx
-                    ? 'bg-blue-500/20 text-blue-500 dark:text-blue-300 font-bold border-l-2 border-blue-500'
+                    ? 'bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] font-bold border-l-2 border-[var(--accent-primary)]'
                     : 'text-[var(--text-muted)] opacity-70'
                 }`}
               >

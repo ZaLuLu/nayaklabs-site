@@ -17,6 +17,11 @@ export function SectionEyebrow({ index, label, className = '' }: SectionEyebrowP
     if (hasAnimated.current) return
     hasAnimated.current = true
 
+    // Skip cypher scramble on reduced motion
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return
+    }
+
     let iteration = 0
     const interval = setInterval(() => {
       setDisplayText(

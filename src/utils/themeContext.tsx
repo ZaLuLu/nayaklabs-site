@@ -27,44 +27,47 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 const THEME_ACCENTS: Record<AccentTheme, { primary: string; glow: string }> = {
   'swiss-red': {
     primary: '#E2001A',
-    glow: 'rgba(226, 0, 26, 0.35)',
+    glow: 'rgba(226, 0, 26, 0.22)',
   },
   emerald: {
-    primary: '#10B981',
-    glow: 'rgba(16, 185, 129, 0.35)',
+    primary: '#00F5A0',
+    glow: 'rgba(0, 245, 160, 0.22)',
   },
   cobalt: {
-    primary: '#3B82F6',
-    glow: 'rgba(59, 130, 246, 0.35)',
+    primary: '#00D2FF',
+    glow: 'rgba(0, 210, 255, 0.22)',
   },
   monochrome: {
-    primary: '#FFFFFF',
-    glow: 'rgba(255, 255, 255, 0.35)',
+    primary: '#F8F9FC',
+    glow: 'rgba(248, 249, 252, 0.22)',
   },
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeMode, setThemeModeState] = useState<ThemeMode>('dark')
-  const [accentTheme, setAccentThemeState] = useState<AccentTheme>('swiss-red')
+  const [themeMode, setThemeModeState] = useState<ThemeMode>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('nayaklabs-theme') as ThemeMode
+      if (saved === 'light' || saved === 'dark') return saved
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+    }
+    return 'dark'
+  })
+
+  const [accentTheme, setAccentThemeState] = useState<AccentTheme>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('nayaklabs-accent') as AccentTheme
+      if (saved && THEME_ACCENTS[saved]) return saved
+    }
+    return 'swiss-red'
+  })
+
   const [audioEnabled, setAudioEnabled] = useState<boolean>(sound.isEnabled())
   const [cursorLabel, setCursorLabel] = useState<string | null>(null)
   const [activeBrief, setActiveBrief] = useState<string | null>(null)
 
   useEffect(() => {
-    const savedMode = localStorage.getItem('nayak_theme_mode') as ThemeMode
-    if (savedMode === 'light' || savedMode === 'dark') {
-      setThemeModeState(savedMode)
-    }
-
-    const savedTheme = localStorage.getItem('nayak_accent_theme') as AccentTheme
-    if (savedTheme && THEME_ACCENTS[savedTheme]) {
-      setAccentThemeState(savedTheme)
-    }
-  }, [])
-
-  useEffect(() => {
     document.documentElement.setAttribute('data-theme', themeMode)
-    localStorage.setItem('nayak_theme_mode', themeMode)
+    localStorage.setItem('nayaklabs-theme', themeMode)
   }, [themeMode])
 
   useEffect(() => {
@@ -72,6 +75,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.style.setProperty('--accent-primary', theme.primary)
     document.documentElement.style.setProperty('--accent-glow', theme.glow)
     document.documentElement.setAttribute('data-accent', accentTheme)
+    localStorage.setItem('nayaklabs-accent', accentTheme)
   }, [accentTheme])
 
   const setThemeMode = (mode: ThemeMode) => {
@@ -86,7 +90,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setAccentTheme = (theme: AccentTheme) => {
     setAccentThemeState(theme)
-    localStorage.setItem('nayak_accent_theme', theme)
     sound.playClick(900)
   }
 
